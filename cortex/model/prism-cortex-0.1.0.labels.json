@@ -1,0 +1,36 @@
+{
+  "version": "0.1.0",
+  "intents": [
+    "connect_robots",
+    "add_site",
+    "design_solution",
+    "schedule_missions",
+    "watch_fleet",
+    "billing_setup",
+    "compliance_setup",
+    "connect_integrations",
+    "track_deals",
+    "run_wizard",
+    "fleet_status",
+    "robot_health",
+    "idle_robots",
+    "mission_status",
+    "billing_status",
+    "compliance_status",
+    "pipeline_status",
+    "site_count",
+    "greeting",
+    "out_of_domain"
+  ],
+  "slots": [
+    "O",
+    "B-platform",
+    "I-platform",
+    "B-payload",
+    "I-payload",
+    "B-taskType",
+    "I-taskType",
+    "B-view",
+    "I-view"
+  ]
+}

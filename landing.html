@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self';"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="description" content="PRISM is the nervous system of your robot fleet — it dispatches missions, enforces compliance, senses failures before they happen, and prices every action your robots take."/>
+<title>PRISM — The nervous system of your fleet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet"/></noscript>
+<style>
+/* ============ Signal tokens (DESIGN-STANDARDS.md §2 — source of truth) ============ */
+:root{
+  --bg0:#0a0b0e;--bg1:#12141a;--bg2:#171a21;--bg3:#20242e;
+  --b1:#20242d;--b2:#2b303b;--b3:#3a414f;
+  --t0:#f5f6f8;--t1:#c0c6d0;--t2:#828b99;--t3:#565e6c;
+  --green:#2fd8a0;--green2:#12b981;--green3:#0a3d2c;
+  --blue:#5aa2ff;--blue2:#2f7fe6;--blue3:#0e2947;
+  --amber:#f59e0b;--amber2:#c77f08;--amber3:#3a2708;
+  --red:#f06548;--red2:#d3492a;--red3:#3d150c;
+  --purple:#a78bfa;--purple2:#7c5cf0;--purple3:#221a45;
+  --teal:#2dd4bf;--teal2:#0fa99a;--teal3:#0a3a37;
+  --accent:#f59e0b;--accent-hi:#fbbf24;--accent-lo:#b8760a;
+  --accent-ink:#1a1206;
+  --accent-tint:rgba(245,158,11,.12);
+  --accent-ring:rgba(245,158,11,.40);
+  --accent-grad:linear-gradient(135deg,#fbbf24 0%,#f59e0b 55%,#e07d0a 100%);
+  --elev1:0 1px 2px rgba(0,0,0,.40);
+  --elev2:0 6px 22px -6px rgba(0,0,0,.55);
+  --elev3:0 18px 50px -12px rgba(0,0,0,.62);
+  --glow:0 0 0 1px var(--accent-ring),0 8px 28px -8px rgba(245,158,11,.35);
+  --mono:'DM Mono',monospace;
+  --head:'Syne',sans-serif;
+  --ui:'Inter',system-ui,-apple-system,sans-serif;
+  --r:8px;--r2:14px;--r3:20px;
+}
+html.light{
+  --bg0:#f7f5f1;--bg1:#ffffff;--bg2:#f3f0ea;--bg3:#e9e4db;
+  --b1:#e8e3d9;--b2:#d9d2c5;--b3:#c2b8a7;
+  --t0:#1b1915;--t1:#3d3931;--t2:#6a6357;--t3:#948c7d;
+  --green:#0f9d6b;--green2:#0a7d54;--green3:#d5f4e6;
+  --blue:#2563eb;--blue2:#1d4ed8;--blue3:#dbeafe;
+  --amber:#c2740a;--amber2:#9a5b07;--amber3:#fbeecf;
+  --red:#d64530;--red2:#b3341f;--red3:#fbe2dc;
+  --purple:#7c3aed;--purple2:#6025c9;--purple3:#ede4ff;
+  --teal:#0d9488;--teal2:#0a7268;--teal3:#d1f3ef;
+  --accent:#d9820b;--accent-hi:#f59e0b;--accent-lo:#a5620a;
+  --accent-ink:#2a1c07;
+  --accent-tint:rgba(217,130,11,.12);
+  --accent-ring:rgba(217,130,11,.34);
+  --accent-grad:linear-gradient(135deg,#f5a623 0%,#e0870c 55%,#c4720a 100%);
+  --elev1:0 1px 2px rgba(60,48,24,.06);
+  --elev2:0 8px 24px -8px rgba(60,48,24,.14);
+  --elev3:0 20px 52px -14px rgba(60,48,24,.18);
+  --glow:0 0 0 1px var(--accent-ring),0 10px 28px -10px rgba(217,130,11,.28);
+}
+/* ============ base ============ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg0);color:var(--t0);font-family:var(--ui);line-height:1.55;-webkit-text-size-adjust:100%;overflow-x:hidden}
+:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg0),0 0 0 4px var(--accent-ring);border-radius:4px}
+::selection{background:var(--accent-tint)}
+button{font-family:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+h1,h2,h3{font-family:var(--head);letter-spacing:-.01em;line-height:1.15}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:var(--r);padding:13px 24px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s,border-color .15s;border:1px solid transparent;min-height:44px}
+.btn-pri{background:var(--accent-grad);color:var(--accent-ink);box-shadow:var(--elev1)}
+.btn-pri:hover{transform:translateY(-1px);box-shadow:var(--glow)}
+.btn-sec{background:transparent;color:var(--t1);border-color:var(--b2)}
+.btn-sec:hover{border-color:var(--accent);color:var(--accent)}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:99px}
+.badge-live{background:var(--accent-tint);color:var(--accent)}
+.badge-ok{background:var(--green3);color:var(--green)}
+.badge-warn{background:var(--amber3);color:var(--amber)}
+.badge-crit{background:var(--red3);color:var(--red)}
+/* ============ nav ============ */
+.nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg1) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--b1)}
+.nav-in{display:flex;align-items:center;gap:20px;height:60px;max-width:1120px;margin:0 auto;padding:0 24px}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--head);font-weight:800;font-size:15px;letter-spacing:.05em;color:var(--t0);text-decoration:none}
+.logo-mark{width:26px;height:26px;border-radius:7px;background:var(--accent-grad);display:grid;place-items:center;color:var(--accent-ink);font-family:var(--mono);font-size:13px;font-weight:500}
+.nav-links{display:flex;gap:4px;margin-left:8px}
+.nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);text-decoration:none;padding:8px 12px;border-radius:6px}
+.nav-links a:hover{color:var(--accent);background:var(--accent-tint)}
+.nav-sp{flex:1}
+.theme-btn{background:transparent;border:1px solid var(--b2);color:var(--t2);width:38px;height:38px;flex-shrink:0;border-radius:8px;cursor:pointer;font-size:14px;line-height:1}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+.nav .btn{padding:9px 16px;font-size:13px;min-height:36px}
+/* ============ hero ============ */
+.hero{padding:72px 0 40px;position:relative}
+.hero::before{content:"";position:absolute;inset:-120px 0 auto;height:480px;background:radial-gradient(600px 300px at 70% 10%,var(--accent-tint),transparent 70%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;position:relative}
+.hero h1{font-size:clamp(30px,4.6vw,50px);font-weight:800;margin-bottom:18px}
+.hero h1 em{font-style:normal;background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:17px;color:var(--t1);max-width:46ch;margin-bottom:28px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.hero-note{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:.04em}
+/* — animated command-center mock — */
+.cc{background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r2);box-shadow:var(--elev3);overflow:hidden}
+.cc-top{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--b1);background:var(--bg2)}
+.cc-dots{display:flex;gap:5px}
+.cc-dots i{width:9px;height:9px;border-radius:50%;background:var(--b3)}
+.cc-title{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}
+.cc-body{display:grid;grid-template-columns:1.25fr 1fr;gap:0}
+.cc-map{position:relative;border-right:1px solid var(--b1);min-height:250px;background:
+  linear-gradient(var(--b1) 1px,transparent 1px),linear-gradient(90deg,var(--b1) 1px,transparent 1px);
+  background-size:28px 28px;background-position:center}
+.cc-zone{position:absolute;border:1px dashed var(--b3);border-radius:8px;font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:4px 6px}
+.cc-bot{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 25%,transparent);transition:left 1.9s linear,top 1.9s linear}
+.cc-bot.warn{background:var(--amber);box-shadow:0 0 0 3px color-mix(in srgb,var(--amber) 25%,transparent)}
+.cc-bot::after{content:attr(data-id);position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:7px;color:var(--t2);white-space:nowrap}
+.cc-side{padding:14px;display:flex;flex-direction:column;gap:12px}
+.cc-kpi .kl{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}
+.cc-kpi .kv{font-family:var(--mono);font-size:26px;font-weight:500;color:var(--t0);font-variant-numeric:tabular-nums}
+.cc-kpi .kv b{color:var(--green);font-weight:500;font-size:13px}
+.cc-feed{flex:1;display:flex;flex-direction:column;gap:6px;overflow:hidden;min-height:110px}
+.cc-line{font-family:var(--mono);font-size:10px;color:var(--t1);display:flex;gap:8px;align-items:baseline;animation:feedin .5s ease}
+.cc-line .tt{color:var(--t3);flex-shrink:0}
+.cc-line .val{color:var(--green)}
+.cc-line .warnv{color:var(--amber)}
+@keyframes feedin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* ============ sections ============ */
+section{padding:72px 0}
+.sec-head{max-width:60ch;margin-bottom:40px}
+.sec-head h2{font-size:clamp(24px,3.2vw,34px);font-weight:800;margin-bottom:10px}
+.sec-head p{color:var(--t1);font-size:15px}
+/* value cards */
+.vcards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.vcard{background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r2);padding:22px;box-shadow:var(--elev1);cursor:pointer;text-align:left;transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden}
+.vcard::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-grad)}
+.vcard:hover{transform:translateY(-3px);box-shadow:var(--elev2)}
+.vcard .ic{font-size:24px;margin-bottom:12px}
+.vcard h3{font-size:17px;margin-bottom:8px}
+.vcard p{font-size:13.5px;color:var(--t1);margin-bottom:14px}
+.vcard .peek{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+/* modal */
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:90;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-back.open{display:flex}
+.modal{background:var(--bg1);border:1px solid var(--b2);border-radius:var(--r3);box-shadow:var(--elev3);max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:26px}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px}
+.modal-head h3{font-size:19px}
+.modal-x{background:transparent;border:1px solid var(--b2);color:var(--t2);width:38px;height:38px;border-radius:8px;cursor:pointer;font-size:14px;flex-shrink:0}
+.modal-x:hover{border-color:var(--accent);color:var(--accent)}
+.modal-sub{color:var(--t1);font-size:13.5px;margin-bottom:18px}
+.modal-cap{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.06em;margin-top:12px}
+/* — product vignettes (recreated with real Signal component patterns) — */
+.vig{background:var(--bg0);border:1px solid var(--b1);border-radius:var(--r2);padding:16px}
+.rb-card{background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r2);padding:14px}
+.rb-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.rb-name{font-family:var(--mono);font-size:13px;color:var(--t0)}
+.rb-name span{color:var(--t3);font-size:10px}
+.hs-row{display:flex;align-items:center;gap:12px;margin:10px 0}
+.hs-num{font-family:var(--mono);font-size:34px;font-weight:500;color:var(--red);font-variant-numeric:tabular-nums}
+.hs-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.hs-bar i{display:block;height:100%;border-radius:3px;background:var(--red);width:38%}
+.rb-meta{display:flex;gap:14px;font-family:var(--mono);font-size:11px;color:var(--t1);flex-wrap:wrap}
+.rb-meta b{color:var(--t0);font-weight:500}
+.al-row{display:flex;gap:10px;align-items:flex-start;background:var(--red3);border:1px solid color-mix(in srgb,var(--red) 30%,transparent);border-radius:var(--r);padding:10px 12px;margin-top:12px}
+.al-row .ai{color:var(--red)}
+.al-row .at{font-size:12.5px;color:var(--t0)}
+.al-row .at span{display:block;font-family:var(--mono);font-size:10px;color:var(--t2);margin-top:2px}
+.chk{list-style:none;display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.chk li{display:flex;gap:10px;align-items:baseline;font-family:var(--mono);font-size:11.5px;color:var(--t1)}
+.chk .ok{color:var(--green)}
+.chk .wr{color:var(--amber)}
+.m-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r);padding:12px 14px;margin-top:10px}
+.m-row .mn{font-size:13px;color:var(--t0)}
+.m-row .mn span{display:block;font-family:var(--mono);font-size:10px;color:var(--t2);margin-top:2px}
+.m-val{font-family:var(--mono);font-size:20px;color:var(--green);font-variant-numeric:tabular-nums;font-weight:500}
+/* ============ builder ============ */
+.builder-cta{background:linear-gradient(180deg,var(--bg1),var(--bg0));border-top:1px solid var(--b1);border-bottom:1px solid var(--b1)}
+.b-back{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(5px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.b-back.open{display:flex}
+.b-sheet{background:var(--bg1);border:1px solid var(--b2);border-radius:var(--r3);box-shadow:var(--elev3);width:100%;max-width:720px;max-height:90vh;overflow:auto;display:flex;flex-direction:column}
+.b-head{display:flex;align-items:center;gap:14px;padding:18px 24px;border-bottom:1px solid var(--b1);position:sticky;top:0;background:var(--bg1);z-index:2}
+.b-head h3{font-size:16px;flex:1}
+.b-steps{display:flex;gap:6px}
+.b-dot{width:26px;height:4px;border-radius:2px;background:var(--bg3)}
+.b-dot.on{background:var(--accent)}
+.b-body{padding:24px;flex:1}
+.b-foot{display:flex;gap:10px;justify-content:space-between;padding:16px 24px;border-top:1px solid var(--b1);position:sticky;bottom:0;background:var(--bg1)}
+.b-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2);margin:0 0 10px}
+.pick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+.pick-grid-2{grid-template-columns:repeat(2,1fr)}
+.pick{background:var(--bg2);border:1.5px solid var(--b2);border-radius:var(--r2);padding:14px;cursor:pointer;text-align:left;transition:border-color .15s,transform .15s;color:var(--t1)}
+.pick:hover{transform:translateY(-2px);border-color:var(--b3)}
+.pick.sel{border-color:var(--accent);background:var(--accent-tint);color:var(--t0)}
+.pick .pi{font-size:22px;display:block;margin-bottom:8px}
+.pick .pn{font-size:13.5px;font-weight:600;color:var(--t0);display:block;margin-bottom:3px}
+.pick .pd{font-size:11px;color:var(--t2);display:block;line-height:1.4}
+.pick .pp{font-family:var(--mono);font-size:10px;color:var(--accent);display:block;margin-top:7px}
+.combo-note{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r);padding:12px 14px;font-size:12.5px;color:var(--t1)}
+.combo-note b{color:var(--t0)}
+/* mission vignette animation */
+.mv{height:110px;background:var(--bg0);border:1px solid var(--b1);border-radius:var(--r);position:relative;overflow:hidden;margin-top:18px}
+.mv-bot{position:absolute;bottom:24px;left:-20px;font-size:20px;animation:mvrun 5s linear infinite}
+.mv-trail{position:absolute;bottom:30px;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,var(--b2) 0 8px,transparent 8px 16px)}
+.mv-tag{position:absolute;top:10px;left:12px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)}
+.mv-ping{position:absolute;font-family:var(--mono);font-size:9px;color:var(--green);opacity:0;animation:mvping 5s linear infinite}
+@keyframes mvrun{from{left:-24px}to{left:calc(100% + 8px)}}
+@keyframes mvping{0%,38%{opacity:0}45%,70%{opacity:1}78%,100%{opacity:0}}
+/* ROI */
+.roi-in{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.roi-in label{display:block}
+.roi-in .lt{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t2);margin-bottom:6px}
+.roi-in input{width:100%;background:var(--bg2);border:1px solid var(--b2);border-radius:var(--r);color:var(--t0);font-family:var(--mono);font-size:16px;padding:11px 12px}
+.roi-in input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-tint)}
+.roi-card{background:var(--bg0);border:1px solid var(--b1);border-radius:var(--r2);padding:20px;position:relative;overflow:hidden}
+.roi-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-grad)}
+.roi-eq{font-family:var(--mono);font-size:clamp(13px,2.4vw,16px);color:var(--t1);margin-bottom:14px}
+.roi-eq b{color:var(--t0);font-weight:500}
+.roi-eq .sum{color:var(--green);font-weight:500}
+.roi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.roi-kpi .kl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t2)}
+.roi-kpi .kv{font-family:var(--mono);font-size:19px;color:var(--t0);font-variant-numeric:tabular-nums}
+.roi-kpi .kv.g{color:var(--green)}
+.roi-note{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:14px;line-height:1.6}
+.roi-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.ea-box{margin-top:16px;background:var(--accent-tint);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:var(--r2);padding:16px;display:none}
+.ea-box.open{display:block}
+.ea-box p{font-size:13px;color:var(--t1);margin-bottom:10px}
+.ea-row{display:flex;gap:8px}
+.ea-row input{flex:1;background:var(--bg1);border:1px solid var(--b2);border-radius:var(--r);color:var(--t0);font-family:var(--mono);font-size:13px;padding:10px 12px;min-width:0}
+.ea-ok{color:var(--green);font-family:var(--mono);font-size:12px;display:none}
+/* ============ proof ============ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:56px}
+.stat{background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r2);padding:20px;position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-grad)}
+.stat .kv{font-family:var(--mono);font-size:26px;font-weight:500;color:var(--t0);font-variant-numeric:tabular-nums}
+.stat .kl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t2);margin-top:6px;line-height:1.5}
+.logos{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px}
+.logo-pill{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--t3);border:1px dashed var(--b2);border-radius:99px;padding:8px 18px}
+/* testimonial carousel */
+.tc{position:relative;background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r2);padding:30px;box-shadow:var(--elev1);max-width:720px}
+.tc q{display:block;font-size:17px;color:var(--t0);font-weight:500;line-height:1.5;quotes:"“" "”";margin-bottom:14px;min-height:78px}
+.tc .who{font-family:var(--mono);font-size:11px;color:var(--t2);letter-spacing:.05em}
+.tc-nav{display:flex;gap:8px;margin-top:18px;align-items:center}
+.tc-btn{background:transparent;border:1px solid var(--b2);color:var(--t2);width:38px;height:38px;flex-shrink:0;border-radius:8px;cursor:pointer}
+.tc-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tc-dots{display:flex;gap:6px;margin-left:6px}
+.tc-dots i{width:6px;height:6px;border-radius:50%;background:var(--bg3)}
+.tc-dots i.on{background:var(--accent)}
+/* final CTA */
+.final{text-align:center;padding:88px 0}
+.final h2{font-size:clamp(26px,3.4vw,38px);font-weight:800;margin-bottom:12px}
+.final p{color:var(--t1);margin-bottom:26px;font-size:15px}
+footer{border-top:1px solid var(--b1);padding:26px 0;font-family:var(--mono);font-size:11px;color:var(--t3)}
+footer .wrap{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+footer a{color:var(--t2);text-decoration:none}
+footer a:hover{color:var(--accent)}
+/* ============ responsive ============ */
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .vcards{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .pick-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+  .nav-links{display:none}
+  .hero{padding-top:44px}
+  .cc-body{grid-template-columns:1fr}
+  .cc-map{min-height:200px;border-right:none;border-bottom:1px solid var(--b1)}
+  .pick-grid{grid-template-columns:1fr}
+  .pick-grid-2{grid-template-columns:1fr}
+  .roi-in{grid-template-columns:1fr}
+  .roi-grid{grid-template-columns:repeat(2,1fr)}
+  section{padding:52px 0}
+  /* builder → full-height bottom sheet on phones */
+  .b-back{padding:0;align-items:flex-end}
+  .b-sheet{max-width:none;max-height:96dvh;height:96dvh;border-radius:var(--r3) var(--r3) 0 0;border-bottom:none}
+  .modal-back{padding:0;align-items:flex-end}
+  .modal{max-width:none;border-radius:var(--r3) var(--r3) 0 0;max-height:92dvh}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<nav class="nav" aria-label="Main">
+  <div class="nav-in">
+    <a class="logo" href="#top">
+      <span class="logo-mark">▲</span> PRISM
+    </a>
+    <div class="nav-links">
+      <a href="#inside">See inside</a>
+      <a href="#builder">Build your solution</a>
+      <a href="#proof">Proof</a>
+    </div>
+    <span class="nav-sp"></span>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle light/dark theme" title="Toggle theme">◐</button>
+    <a class="btn btn-pri" href="./PRISM-v10-complete.html">See a Live Demo</a>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Robotics Operations Platform</div>
+      <h1>See what your fleet is <em>actually doing</em> — and what it could do.</h1>
+      <p class="hero-sub">PRISM is the nervous system of your robot fleet. It dispatches missions, enforces compliance on every one, senses failures before they happen — and prices every action your robots take.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-pri" href="./PRISM-v10-complete.html">▶ See a Live Demo</a>
+        <button class="btn btn-sec" onclick="openBuilder()">Build Your Solution</button>
+      </div>
+      <div class="hero-note">No signup. The demo is the real product running a simulated fleet.</div>
+    </div>
+
+    <!-- animated command-center mock (simulated feed, honestly labeled) -->
+    <div class="cc" aria-hidden="true">
+      <div class="cc-top">
+        <span class="cc-dots"><i></i><i></i><i></i></span>
+        <span class="cc-title">PRISM · Command Center</span>
+        <span class="nav-sp"></span>
+        <span class="badge badge-live">● Simulated feed</span>
+      </div>
+      <div class="cc-body">
+        <div class="cc-map" id="ccMap">
+          <div class="cc-zone" style="left:6%;top:8%;width:42%;height:38%">Warehouse A</div>
+          <div class="cc-zone" style="left:56%;top:14%;width:36%;height:30%">Substation</div>
+          <div class="cc-zone" style="left:12%;top:56%;width:60%;height:34%">Yard · Perimeter</div>
+        </div>
+        <div class="cc-side">
+          <div class="cc-kpi">
+            <div class="kl">Value in motion</div>
+            <div class="kv">$<span id="ccTicker">1,284,900</span><b> ▲</b></div>
+          </div>
+          <div class="cc-kpi">
+            <div class="kl">Robots online</div>
+            <div class="kv" style="font-size:18px"><span style="color:var(--green)">21</span><span style="color:var(--t3)">/22</span></div>
+          </div>
+          <div class="cc-feed" id="ccFeed"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= VALUE / SEE INSIDE ================= -->
+<section id="inside">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">See inside PRISM</div>
+      <h2>The invisible work of your fleet, made visible.</h2>
+      <p>Three things PRISM does every hour that you currently can't see. Click any card to look inside the product.</p>
+    </div>
+    <div class="vcards">
+      <button class="vcard" onclick="openModal('m-health')">
+        <span class="ic">🩺</span>
+        <h3>Fleet Health</h3>
+        <p>Every robot carries a live health score. When it slips, PRISM raises the alert before the robot fails on a job.</p>
+        <span class="peek">Look inside →</span>
+      </button>
+      <button class="vcard" onclick="openModal('m-comp')">
+        <span class="ic">🛡️</span>
+        <h3>Compliance Automation</h3>
+        <p>Every mission is checked against your ruleset before it dispatches. Blocked means blocked — and it's all audited.</p>
+        <span class="peek">Look inside →</span>
+      </button>
+      <button class="vcard" onclick="openModal('m-value')">
+        <span class="ic">💵</span>
+        <h3>Value Quantified</h3>
+        <p>Every patrol, inspection and scan carries a dollar value. See what the fleet earned today — and bill it.</p>
+        <span class="peek">Look inside →</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BUILDER CTA BAND ================= -->
+<section class="builder-cta" id="builder">
+  <div class="wrap" style="text-align:center">
+    <div class="eyebrow">Interactive · No account required</div>
+    <h2 style="font-size:clamp(24px,3.2vw,34px);font-weight:800;margin-bottom:12px">What would a robot fleet be worth on <em style="font-style:normal;color:var(--accent)">your</em> site?</h2>
+    <p style="color:var(--t1);max-width:52ch;margin:0 auto 26px;font-size:15px">Tell us the problem you're trying to solve. In sixty seconds PRISM picks the robot, the sensor and the mission — and shows you the ROI math in full.</p>
+    <button class="btn btn-pri" style="font-size:15px;padding:15px 30px" onclick="openBuilder()">Build Your Solution</button>
+    <div class="hero-note" style="margin-top:14px">3 steps · 60 seconds · printable quote at the end</div>
+  </div>
+</section>
+
+<!-- ================= PROOF ================= -->
+<section id="proof">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Proof, not promises</div>
+      <h2>Built like infrastructure. Priced like software.</h2>
+      <p>PRISM is load-tested, audit-chained and compliance-gated from day one — because your fleet is not a side project.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="kv">250</div><div class="kl">Robots in sustained live-telemetry load test</div></div>
+      <div class="stat"><div class="kv">100%</div><div class="kl">Telemetry accepted · zero server errors, 15+ cycles</div></div>
+      <div class="stat"><div class="kv">4</div><div class="kl">Compliance rulesets shipped — OSHA · FAA Part 107 · ISO 3691-4 · ISO 10218</div></div>
+      <div class="stat"><div class="kv">100%</div><div class="kl">Of fleet decisions written to a tamper-evident audit chain</div></div>
+    </div>
+
+    <div class="b-lbl">Pilot program partners</div>
+    <div class="logos" aria-label="Pilot partners (placeholder)">
+      <span class="logo-pill">NORTHPORT LOGISTICS</span>
+      <span class="logo-pill">HELVETIA GRID CO</span>
+      <span class="logo-pill">MERIDIAN AGRI</span>
+      <span class="logo-pill">CASCADE FACILITIES</span>
+      <span class="logo-pill">+ your fleet</span>
+    </div>
+
+    <div class="tc" id="tc">
+      <q id="tcQuote"></q>
+      <div class="who" id="tcWho"></div>
+      <div class="tc-nav">
+        <button class="tc-btn" onclick="tcMove(-1)" aria-label="Previous testimonial">←</button>
+        <button class="tc-btn" onclick="tcMove(1)" aria-label="Next testimonial">→</button>
+        <div class="tc-dots" id="tcDots"></div>
+        <span class="nav-sp"></span>
+        <span class="badge badge-warn">Pilot program · illustrative</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section class="final">
+  <div class="wrap">
+    <div class="eyebrow">Early access</div>
+    <h2>Your robots are already generating data.<br/>Start generating value.</h2>
+    <p>Join the early-access program — no obligation, no credit card, and your quote from the builder carries over.</p>
+    <div class="hero-ctas" style="justify-content:center">
+      <button class="btn btn-pri" onclick="openBuilder()">Build Your Solution</button>
+      <a class="btn btn-sec" href="./PRISM-v10-complete.html">Open the Live Demo</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>PRISM · Robotics Operations Platform</span>
+    <a href="./PRISM-v10-complete.html">Live demo</a>
+    <a href="#inside">See inside</a>
+    <a href="#builder">Build your solution</a>
+    <span class="nav-sp"></span>
+    <span>Signal design system · adaptive light/dark</span>
+  </div>
+</footer>
+
+<!-- ================= VALUE MODALS ================= -->
+<div class="modal-back" id="m-health" role="dialog" aria-modal="true" aria-labelledby="m-health-t">
+  <div class="modal">
+    <div class="modal-head"><h3 id="m-health-t">Fleet Health — predictive maintenance</h3><button class="modal-x" onclick="closeModal('m-health')" aria-label="Close">✕</button></div>
+    <p class="modal-sub">Predictive maintenance prevents costly downtime. PRISM scores every robot 0–100 from live telemetry, mission failures and error transitions — and raises the alert while the fix is still cheap.</p>
+    <div class="vig">
+      <div class="rb-card">
+        <div class="rb-top">
+          <div class="rb-name">Atlas-07 <span>· Spot · Substation B</span></div>
+          <span class="badge badge-crit">Critical</span>
+        </div>
+        <div class="hs-row">
+          <div class="hs-num">38</div>
+          <div style="flex:1">
+            <div class="kl" style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t2)">Health score · EWMA-smoothed</div>
+            <div class="hs-bar"><i></i></div>
+          </div>
+        </div>
+        <div class="rb-meta">
+          <span>Battery <b>64%</b></span>
+          <span>Status <b style="color:var(--amber)">degraded</b></span>
+          <span>Missions 7d <b>41</b></span>
+          <span>Failures 7d <b style="color:var(--red)">3</b></span>
+        </div>
+        <div class="al-row">
+          <span class="ai">⚠</span>
+          <div class="at">Maintenance alert — health crossed the critical band (40).
+            <span>Raised 14 min ago · acknowledged by J. Ferro · service scheduled Thu 09:00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="modal-cap">Recreated from the live product's Fleet Health view, pixel patterns and tokens identical.</p>
+  </div>
+</div>
+
+<div class="modal-back" id="m-comp" role="dialog" aria-modal="true" aria-labelledby="m-comp-t">
+  <div class="modal">
+    <div class="modal-head"><h3 id="m-comp-t">Compliance Automation — every mission, gated</h3><button class="modal-x" onclick="closeModal('m-comp')" aria-label="Close">✕</button></div>
+    <p class="modal-sub">Know your fleet meets every regulation. Auditable. Always. Missions are evaluated against your assigned ruleset <em>before</em> they're created — there is no bypass lane, not even for automation.</p>
+    <div class="vig">
+      <div class="rb-card">
+        <div class="rb-top">
+          <div class="rb-name">Mission · Perimeter patrol <span>· Yard East</span></div>
+          <span class="badge badge-ok">✓ Compliant</span>
+        </div>
+        <div class="kl" style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t2);margin-top:4px">Ruleset · ISO 3691-4 (driverless industrial trucks / AMRs)</div>
+        <ul class="chk">
+          <li><span class="ok">✓</span> Speed limited to 1.2 m/s in shared pedestrian zones</li>
+          <li><span class="ok">✓</span> Emergency-stop reachability verified for route</li>
+          <li><span class="ok">✓</span> Operating window inside approved schedule</li>
+          <li><span class="wr">△</span> Night-shift lighting below recommended lux — <b style="color:var(--t0)">warn recorded</b>, not blocking</li>
+        </ul>
+        <div class="rb-meta">
+          <span style="color:var(--t3)">audit</span>
+          <span class="mono" style="font-size:10px;color:var(--t2)">MISSION_CREATED · chain #4,182 · hash-linked · 2 warn(s) recorded on result</span>
+        </div>
+      </div>
+    </div>
+    <p class="modal-cap">A blocked mission returns 422 and writes MISSION_BLOCKED to the audit chain — no row, no dispatch.</p>
+  </div>
+</div>
+
+<div class="modal-back" id="m-value" role="dialog" aria-modal="true" aria-labelledby="m-value-t">
+  <div class="modal">
+    <div class="modal-head"><h3 id="m-value-t">Value Quantified — every action, priced</h3><button class="modal-x" onclick="closeModal('m-value')" aria-label="Close">✕</button></div>
+    <p class="modal-sub">Every action generates value you can see and bill. PRISM links each mission to the use case that justifies it, so a 30-minute run isn't "activity" — it's revenue.</p>
+    <div class="vig">
+      <div class="m-row">
+        <div class="mn">Thermal inspection — Substation B<span>Atlas-07 · 30 min runtime · completed 11:42</span></div>
+        <div class="m-val">+$2,400</div>
+      </div>
+      <div class="m-row">
+        <div class="mn">Inventory cycle-count — Warehouse A<span>AMR-3 · 22 min runtime · completed 11:18</span></div>
+        <div class="m-val">+$320</div>
+      </div>
+      <div class="m-row" style="border-color:color-mix(in srgb,var(--accent) 35%,transparent)">
+        <div class="mn"><b>Value today</b><span>17 actions across 3 sites</span></div>
+        <div class="m-val" style="color:var(--accent)">$9,840</div>
+      </div>
+    </div>
+    <p class="modal-cap">The same numbers feed Value &amp; Billing — subscription + value-share invoicing, one click.</p>
+  </div>
+</div>
+
+<!-- ================= BUILDER WIZARD ================= -->
+<div class="b-back" id="bBack" role="dialog" aria-modal="true" aria-labelledby="bTitle">
+  <div class="b-sheet">
+    <div class="b-head">
+      <h3 id="bTitle">Build your solution</h3>
+      <div class="b-steps" aria-hidden="true"><span class="b-dot" id="bd1"></span><span class="b-dot" id="bd2"></span><span class="b-dot" id="bd3"></span></div>
+      <button class="modal-x" onclick="closeBuilder()" aria-label="Close builder">✕</button>
+    </div>
+    <div class="b-body" id="bBody"><!-- rendered by JS --></div>
+    <div class="b-foot">
+      <button class="btn btn-sec" id="bPrev" onclick="bNav(-1)">← Back</button>
+      <button class="btn btn-pri" id="bNext" onclick="bNav(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ============ theme (initTheme pattern from DESIGN-STANDARDS.md) ============ */
+(function initTheme(){
+  var KEY='prism-landing-theme';
+  var saved=null; try{saved=localStorage.getItem(KEY);}catch(e){}
+  var mq=window.matchMedia('(prefers-color-scheme: light)');
+  function apply(mode){document.documentElement.classList.toggle('light',mode==='light');}
+  apply(saved||(mq.matches?'light':'dark'));
+  if(!saved&&mq.addEventListener)mq.addEventListener('change',function(e){apply(e.matches?'light':'dark');});
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var next=document.documentElement.classList.contains('light')?'dark':'light';
+    apply(next); try{localStorage.setItem(KEY,next);}catch(e){}
+  });
+})();
+
+/* ============ hero: simulated command center ============ */
+(function heroSim(){
+  var map=document.getElementById('ccMap');
+  var bots=[
+    {id:'ATLAS-07',x:62,y:22,warn:false},{id:'AMR-3',x:18,y:18,warn:false},
+    {id:'AMR-5',x:34,y:30,warn:true},{id:'ROVER-2',x:24,y:70,warn:false},
+    {id:'ROVER-4',x:58,y:74,warn:false}
+  ];
+  bots.forEach(function(b){
+    var el=document.createElement('div');
+    el.className='cc-bot'+(b.warn?' warn':'');
+    el.setAttribute('data-id',b.id);
+    el.style.left=b.x+'%';el.style.top=b.y+'%';
+    map.appendChild(el);b.el=el;
+  });
+  function wander(){
+    bots.forEach(function(b){
+      b.x=Math.max(4,Math.min(90,b.x+(Math.random()*22-11)));
+      b.y=Math.max(6,Math.min(86,b.y+(Math.random()*18-9)));
+      b.el.style.left=b.x+'%';b.el.style.top=b.y+'%';
+    });
+  }
+  var ticker=document.getElementById('ccTicker');
+  var value=1284900;
+  var feed=document.getElementById('ccFeed');
+  var events=[
+    ['11:42','val','Thermal inspection complete · Substation B · +$2,400'],
+    ['11:44','','Patrol dispatched · Yard East · ISO 3691-4 ✓'],
+    ['11:47','warnv','Health 38 · Atlas-07 · maintenance alert raised'],
+    ['11:49','val','Inventory cycle-count · Warehouse A · +$320'],
+    ['11:52','','Compliance gate · 1 warn recorded · not blocking'],
+    ['11:55','val','Perimeter patrol complete · +$180'],
+    ['11:57','','Battery 22% · Rover-2 returning to dock'],
+    ['12:01','val','Roof inspection complete · +$480']
+  ];
+  var ei=0;
+  function pushEvent(){
+    var e=events[ei++%events.length];
+    var line=document.createElement('div');
+    line.className='cc-line';
+    line.innerHTML='<span class="tt">'+e[0]+'</span><span class="'+e[1]+'">'+e[2]+'</span>';
+    feed.prepend(line);
+    while(feed.children.length>5)feed.removeChild(feed.lastChild);
+    if(e[1]==='val'){value+=Math.round(200+Math.random()*2300);ticker.textContent=value.toLocaleString('en-US');}
+  }
+  var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  pushEvent();pushEvent();pushEvent();
+  if(!reduced){setInterval(wander,2000);setInterval(pushEvent,2500);wander();}
+})();
+
+/* ============ modals ============ */
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+document.querySelectorAll('.modal-back').forEach(function(back){
+  back.addEventListener('click',function(e){if(e.target===back)closeModal(back.id);});
+});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape')return;
+  document.querySelectorAll('.modal-back.open').forEach(function(b){closeModal(b.id);});
+  if(document.getElementById('bBack').classList.contains('open'))closeBuilder();
+});
+
+/* ============ builder ============ */
+var PLATFORMS=[
+  {id:'spot',ic:'🐕',name:'Boston Dynamics Spot',desc:'Legged · stairs, gravel, plant floors. Managed via Orbit fleet API.',capex:74500,price:'$74.5K',uses:'Substations, plants, construction'},
+  {id:'amr', ic:'🛞',name:'Wheeled AMR',desc:'Indoor autonomous mobile robot. Any vendor with a REST API.',capex:28900,price:'$28.9K',uses:'Warehouses, factories, retail'},
+  {id:'rover',ic:'🤖',name:'ROS 2 Rover',desc:'Open-platform outdoor rover on ROS 2 / rosbridge.',capex:18900,price:'$18.9K',uses:'Yards, farms, perimeters'}
+];
+var PAYLOADS=[
+  {id:'thermal',ic:'🌡️',name:'Thermal camera',desc:'Radiometric IR — finds hot joints, leaks and failing gear before people can.',capex:12400,price:'$12.4K',best:['inspection','monitoring']},
+  {id:'lidar',ic:'📡',name:'LiDAR scanner',desc:'3D scans for volumetrics, change detection and mapping.',capex:15800,price:'$15.8K',best:['inventory','patrol']},
+  {id:'inspect',ic:'🔍',name:'Inspection kit',desc:'30× optical zoom + acoustic imaging for visual detail work.',capex:8900,price:'$8.9K',best:['inspection','patrol']}
+];
+var MISSIONS=[
+  {id:'patrol',ic:'🚨',name:'Patrol',desc:'Scheduled security rounds with anomaly alerts pushed to your phone.',base:180},
+  {id:'inspection',ic:'🔧',name:'Inspection',desc:'Close-up equipment checks — thermal, visual, acoustic — on a route you set once.',base:480},
+  {id:'inventory',ic:'📦',name:'Inventory',desc:'Cycle counts and volumetrics without stopping the floor.',base:320},
+  {id:'monitoring',ic:'📈',name:'Monitoring',desc:'Continuous environmental + condition watch with trend alerts.',base:140}
+];
+var PROBLEMS=[
+  {id:'inspect', ic:'🔍', title:'Inspection rounds eat up our people\'s time',
+   sub:'Techs walk the site checking equipment by eye.', platform:'spot', payload:'thermal', mission:'inspection'},
+  {id:'leaks',   ic:'💨', title:'We find leaks and hot spots too late',
+   sub:'Failing gear runs hot for weeks before anyone notices.', platform:'spot', payload:'thermal', mission:'monitoring'},
+  {id:'security',ic:'🌙', title:'Security coverage has gaps, especially at night',
+   sub:'Guards can\'t cover the whole perimeter after hours.', platform:'rover', payload:'inspect', mission:'patrol'},
+  {id:'inventory',ic:'📦',title:'Our inventory counts are never right',
+   sub:'Manual cycle counts are slow and never match the system.', platform:'amr', payload:'lidar', mission:'inventory'},
+  {id:'environ', ic:'🌫️', title:'We can\'t prove conditions stay within limits',
+   sub:'Temperature, gas and condition checks are spotty and manual.', platform:'spot', payload:'thermal', mission:'monitoring'},
+  {id:'mapping', ic:'🗺️', title:'We need to measure and map our yard / site',
+   sub:'Stockpiles and layout change and we\'re guessing at volumes.', platform:'rover', payload:'lidar', mission:'inventory'}
+];
+var SITE_ENVS=[
+  {k:'indoor_flat',t:'Inside, flat floors'},{k:'indoor_stairs',t:'Multiple floors / stairs'},
+  {k:'outdoor',t:'Outdoor yard / perimeter'},{k:'elevated',t:'Up high — roofs / towers'},
+  {k:'hazardous',t:'Hazardous / explosive area'}
+];
+var bState={step:1,problem:'inspect',platform:'spot',payload:'thermal',mission:'inspection',env:'indoor_flat',ha:12,freq:22};
+
+function openBuilder(){bState.step=1;renderBuilder();document.getElementById('bBack').classList.add('open');document.body.style.overflow='hidden';}
+function closeBuilder(){document.getElementById('bBack').classList.remove('open');document.body.style.overflow='';}
+function bNav(d){
+  bState.step=Math.max(1,Math.min(3,bState.step+d));
+  renderBuilder();
+  document.getElementById('bBody').scrollTop=0;
+}
+function bPick(kind,id){bState[kind]=id;renderBuilder();}
+function bPickProblem(id){
+  var p=PROBLEMS.find(function(x){return x.id===id;});
+  bState.problem=id;bState.platform=p.platform;bState.payload=p.payload;bState.mission=p.mission;
+  renderBuilder();
+}
+function bPickEnv(k){bState.env=k;renderBuilder();}
+function pickProblemBtn(p){
+  var sel=bState.problem===p.id;
+  return '<button class="pick'+(sel?' sel':'')+'" onclick="bPickProblem(\''+p.id+'\')" aria-pressed="'+sel+'">'
+    +'<span class="pi">'+p.ic+'</span><span class="pn">'+p.title+'</span>'
+    +'<span class="pd">'+p.sub+'</span></button>';
+}
+function pickEnvBtn(e){
+  var sel=bState.env===e.k;
+  return '<button class="pick'+(sel?' sel':'')+'" style="padding:12px" onclick="bPickEnv(\''+e.k+'\')" aria-pressed="'+sel+'">'
+    +'<span class="pn" style="margin-bottom:0">'+e.t+'</span></button>';
+}
+function pickBtn(kind,item,extra){
+  var sel=bState[kind]===item.id;
+  return '<button class="pick'+(sel?' sel':'')+'" onclick="bPick(\''+kind+'\',\''+item.id+'\')" aria-pressed="'+sel+'">'
+    +'<span class="pi">'+item.ic+'</span><span class="pn">'+item.name+'</span>'
+    +'<span class="pd">'+item.desc+'</span>'
+    +(extra||'')+'</button>';
+}
+function fmtUSD(n){return '$'+Math.round(n).toLocaleString('en-US');}
+function calcROI(){
+  var pl=PLATFORMS.find(function(p){return p.id===bState.platform;});
+  var pd=PAYLOADS.find(function(p){return p.id===bState.payload;});
+  var ms=MISSIONS.find(function(m){return m.id===bState.mission;});
+  var sizeFactor=Math.sqrt(Math.max(1,bState.ha)/12);           // $/action scales with site size, 12 ha = baseline
+  var fit=pd.best.indexOf(ms.id)>=0?1:0.75;                      // payload↔mission fit
+  var perAction=Math.round(ms.base*sizeFactor*fit);
+  var weekly=perAction*bState.freq;
+  var annual=weekly*52;
+  var capex=pl.capex+pd.capex;
+  var opex=Math.round(capex*0.12)+2400;                          // 12% capex/yr service + platform sub
+  var net=annual-opex;
+  var payback=net>0?Math.max(1,Math.round(capex/(net/12))):null;
+  var fitPct=Math.round(fit*100- (fit===1?4:12) + (ms.base>=320?4:0)); // display fit%
+  return {pl:pl,pd:pd,ms:ms,perAction:perAction,weekly:weekly,annual:annual,capex:capex,opex:opex,net:net,payback:payback,fitPct:Math.min(98,fitPct)};
+}
+function renderBuilder(){
+  for(var i=1;i<=3;i++)document.getElementById('bd'+i).classList.toggle('on',i<=bState.step);
+  var body=document.getElementById('bBody');
+  var prev=document.getElementById('bPrev'),next=document.getElementById('bNext');
+  prev.style.visibility=bState.step===1?'hidden':'visible';
+  next.textContent=bState.step===3?'Done ✓':'Next →';
+  next.onclick=bState.step===3?closeBuilder:function(){bNav(1);};
+
+  if(bState.step===1){
+    var pd0=PAYLOADS.find(function(p){return p.id===bState.payload;});
+    var pl0=PLATFORMS.find(function(p){return p.id===bState.platform;});
+    body.innerHTML=
+      '<div class="b-lbl">Step 1 · What problem are you trying to solve?</div>'
+      +'<div class="pick-grid pick-grid-2">'+PROBLEMS.map(function(p){return pickProblemBtn(p);}).join('')+'</div>'
+      +'<div class="combo-note">Sounds like a job for a <b>'+pl0.name+' carrying a '+pd0.name+'</b> — the robot automates the legwork, the sensor collects the data that pays for it. We\'ll size it next.</div>';
+  } else if(bState.step===2){
+    var msSel=MISSIONS.find(function(m){return m.id===bState.mission;});
+    body.innerHTML=
+      '<div class="b-lbl">Step 2 · Tell us about your site</div>'
+      +'<div class="pick-grid">'+SITE_ENVS.map(function(e){return pickEnvBtn(e);}).join('')+'</div>'
+      +'<div class="roi-in">'
+      +'  <label><span class="lt">How big is the area? (hectares)</span><input type="number" inputmode="decimal" min="1" max="500" step="1" value="'+bState.ha+'" id="roiHa"/></label>'
+      +'  <label><span class="lt">How often should it run? (runs per week)</span><input type="number" inputmode="numeric" min="1" max="200" step="1" value="'+bState.freq+'" id="roiFreq"/></label>'
+      +'</div>'
+      +'<div class="combo-note">'+msSel.desc+'</div>';
+    document.getElementById('roiHa').addEventListener('input',function(){bState.ha=Math.max(1,parseFloat(this.value)||1);refreshROI();});
+    document.getElementById('roiFreq').addEventListener('input',function(){bState.freq=Math.max(1,parseInt(this.value,10)||1);refreshROI();});
+  } else {
+    var r=calcROI();
+    var probSel=PROBLEMS.find(function(p){return p.id===bState.problem;});
+    var probTitle=probSel?probSel.title.charAt(0).toLowerCase()+probSel.title.slice(1):'';
+    body.innerHTML=
+      '<div class="b-lbl">Step 3 · Your solution + ROI</div>'
+      +'<div class="combo-note" style="margin-bottom:18px"><b>Here\'s what we\'d deploy:</b> a <b>'+r.pl.name+'</b> carrying a <b>'+r.pd.name+'</b>, running <b>'+r.ms.name.toLowerCase()+'</b> — because you told us <i>'+probTitle+'</i>.</div>'
+      +'<div class="roi-card">'
+      +'  <div class="roi-eq"><b>'+bState.freq+' '+r.ms.name.toLowerCase()+'s/week</b> × <b>'+fmtUSD(r.perAction)+' value each</b> = <span class="sum">'+fmtUSD(r.weekly)+'/week</span></div>'
+      +'  <div class="roi-grid">'
+      +'    <div class="roi-kpi"><div class="kl">Annual value</div><div class="kv g">'+fmtUSD(r.annual)+'</div></div>'
+      +'    <div class="roi-kpi"><div class="kl">System capex</div><div class="kv">'+fmtUSD(r.capex)+'</div></div>'
+      +'    <div class="roi-kpi"><div class="kl">Payback</div><div class="kv">'+(r.payback?r.payback+' mo':'—')+'</div></div>'
+      +'    <div class="roi-kpi"><div class="kl">Solution fit</div><div class="kv">'+r.fitPct+'%</div></div>'
+      +'  </div>'
+      +'  <div class="roi-note">'+r.pl.name+' + '+r.pd.name+' running '+r.ms.name.toLowerCase()+' · value/action scales with site size (baseline 12 ha) · opex est. '+fmtUSD(r.opex)+'/yr (service + platform). Illustrative model — your quote refines it.</div>'
+      +'  <div class="roi-ctas">'
+      +'    <button class="btn btn-pri" onclick="downloadQuote()">Download quote (PDF)</button>'
+      +'    <button class="btn btn-sec" onclick="toggleEA()">Request early access</button>'
+      +'  </div>'
+      +'  <div class="ea-box" id="eaBox">'
+      +'    <p><b>You\'ve seen the math — want it running on your site?</b> Leave an email and we\'ll set up your workspace with this exact solution pre-loaded. No obligation.</p>'
+      +'    <div class="ea-row"><input type="email" inputmode="email" placeholder="you@company.com" id="eaMail" aria-label="Work email"/><button class="btn btn-pri" onclick="eaSubmit()">Request access</button></div>'
+      +'    <p class="ea-ok" id="eaOk">✓ Noted — your solution config is saved with the request.</p>'
+      +'  </div>'
+      +'</div>';
+  }
+}
+function refreshROI(){
+  /* re-render only the card body values without rebuilding inputs (keeps focus) */
+  var r=calcROI();
+  var card=document.querySelector('.roi-card');if(!card)return;
+  card.querySelector('.roi-eq').innerHTML='<b>'+bState.freq+' '+r.ms.name.toLowerCase()+'s/week</b> × <b>'+fmtUSD(r.perAction)+' value each</b> = <span class="sum">'+fmtUSD(r.weekly)+'/week</span>';
+  var kv=card.querySelectorAll('.roi-kpi .kv');
+  kv[0].textContent=fmtUSD(r.annual);kv[1].textContent=fmtUSD(r.capex);
+  kv[2].textContent=r.payback?r.payback+' mo':'—';kv[3].textContent=r.fitPct+'%';
+}
+function toggleEA(){document.getElementById('eaBox').classList.toggle('open');}
+function eaSubmit(){
+  var m=document.getElementById('eaMail');
+  if(!m.value||m.value.indexOf('@')<1){m.focus();return;}
+  try{localStorage.setItem('prism-ea-request',JSON.stringify({email:m.value,solution:bState,at:new Date().toISOString()}));}catch(e){}
+  document.getElementById('eaOk').style.display='block';
+  m.disabled=true;
+}
+/* — printable quote (blob URL pattern, same as the Grow module) — */
+function downloadQuote(){
+  var r=calcROI();
+  var P=PROBLEMS.find(function(p){return p.id===bState.problem;})||{title:'',sub:''};
+  var d=new Date();
+  var dateStr=d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  var qNo='Q-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(Math.floor(Math.random()*900)+100);
+  var html='<!DOCTYPE html><html><head><meta charset="utf-8"/><title>PRISM Solution Quote '+qNo+'</title><style>'
+    +'@page{margin:18mm}body{font-family:Inter,system-ui,sans-serif;color:#1b1915;max-width:720px;margin:24px auto;padding:0 16px;line-height:1.5}'
+    +'.hd{display:flex;align-items:center;gap:10px;border-bottom:3px solid #d9820b;padding-bottom:14px;margin-bottom:22px}'
+    +'.mk{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#f5a623,#c4720a);color:#2a1c07;display:flex;align-items:center;justify-content:center;font-weight:700}'
+    +'h1{font-size:20px;margin:0}h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#c2740a;margin:26px 0 8px}'
+    +'.meta{color:#6a6357;font-size:12px;margin-left:auto;text-align:right}'
+    +'table{width:100%;border-collapse:collapse;font-size:13.5px}td,th{text-align:left;padding:8px 10px;border-bottom:1px solid #e8e3d9}'
+    +'th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#6a6357}'
+    +'.num{text-align:right;font-variant-numeric:tabular-nums}'
+    +'.hero-line{background:#fbeecf;border-radius:10px;padding:14px 16px;font-size:15px;margin:14px 0}'
+    +'.hero-line b{color:#9a5b07}'
+    +'.fine{font-size:10.5px;color:#948c7d;margin-top:26px;border-top:1px solid #e8e3d9;padding-top:12px}'
+    +'@media print{.noprint{display:none}}'
+    +'.noprint{margin:20px 0}.noprint button{padding:10px 18px;border-radius:8px;border:none;background:linear-gradient(135deg,#f5a623,#c4720a);color:#2a1c07;font-weight:600;cursor:pointer}'
+    +'</style></head><body>'
+    +'<div class="hd"><div class="mk">▲</div><div><h1>PRISM Solution Quote</h1><div style="font-size:12px;color:#6a6357">The nervous system of your fleet</div></div>'
+    +'<div class="meta">'+qNo+'<br/>'+dateStr+'<br/>Valid 30 days</div></div>'
+    +'<h2>The problem you described</h2><p style="font-size:13px">'+P.title+' — '+P.sub+'</p>'
+    +'<div class="hero-line"><b>'+bState.freq+' '+r.ms.name.toLowerCase()+'s/week × '+fmtUSD(r.perAction)+' value each = '+fmtUSD(r.weekly)+'/week</b> ('+fmtUSD(r.annual)+'/year)</div>'
+    +'<h2>Your solution</h2><table>'
+    +'<tr><th>Component</th><th>Detail</th><th class="num">Price</th></tr>'
+    +'<tr><td>Platform</td><td>'+r.pl.name+' — '+r.pl.desc+'</td><td class="num">'+fmtUSD(r.pl.capex)+'</td></tr>'
+    +'<tr><td>Payload</td><td>'+r.pd.name+' — '+r.pd.desc+'</td><td class="num">'+fmtUSD(r.pd.capex)+'</td></tr>'
+    +'<tr><td>Mission</td><td>'+r.ms.name+' · '+bState.freq+' runs/week · site '+bState.ha+' ha · site: '+(SITE_ENVS.find(function(e){return e.k===bState.env;})||{t:''}).t+'</td><td class="num">—</td></tr>'
+    +'<tr><td><b>System capex</b></td><td></td><td class="num"><b>'+fmtUSD(r.capex)+'</b></td></tr></table>'
+    +'<p style="font-size:12px;color:#6a6357">PRISM picked this platform + payload combination because it is the lowest-cost setup that fully addresses the stated problem — the platform automates the movement, the payload collects the data that creates the value.</p>'
+    +'<h2>Return on investment</h2><table>'
+    +'<tr><th>Metric</th><th class="num">Value</th></tr>'
+    +'<tr><td>Value per action</td><td class="num">'+fmtUSD(r.perAction)+'</td></tr>'
+    +'<tr><td>Annual value generated</td><td class="num">'+fmtUSD(r.annual)+'</td></tr>'
+    +'<tr><td>Estimated annual opex (service + platform)</td><td class="num">'+fmtUSD(r.opex)+'</td></tr>'
+    +'<tr><td>Net annual value</td><td class="num">'+fmtUSD(r.net)+'</td></tr>'
+    +'<tr><td><b>Simple payback</b></td><td class="num"><b>'+(r.payback?r.payback+' months':'—')+'</b></td></tr>'
+    +'<tr><td>Solution fit</td><td class="num">'+r.fitPct+'%</td></tr></table>'
+    +'<h2>What PRISM adds</h2>'
+    +'<p style="font-size:13px">Autonomous dispatch and scheduling · compliance gating on every mission (OSHA, FAA Part 107, ISO 3691-4, ISO 10218) with a tamper-evident audit chain · predictive-maintenance health scoring · live telemetry and alerts on any device · value tracking and RaaS billing for every action the fleet takes.</p>'
+    +'<div class="noprint"><button onclick="window.print()">Print / save as PDF</button></div>'
+    +'<div class="fine">Illustrative planning estimate generated by the PRISM Solution Builder on '+dateStr+'. Value-per-action model: mission baseline × site-size factor × payload fit. Final pricing subject to site survey and vendor quotes. PRISM · Robotics Operations Platform.</div>'
+    +'</body></html>';
+  var url=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+  var w=window.open(url,'_blank');
+  if(!w)location.href=url;
+  setTimeout(function(){URL.revokeObjectURL(url);},60000);
+}
+
+/* ============ testimonial carousel ============ */
+var TESTS=[
+  {q:'I used to drive between sites to check on things. Now I get an alert when something\'s wrong — and a dollar figure for everything that went right.',w:'Operations manager · logistics pilot'},
+  {q:'The compliance gate is the feature I didn\'t know I needed. Auditors asked how we enforce our safety rules; we showed them the audit chain and the meeting ended early.',w:'EHS lead · utilities pilot'},
+  {q:'A robot went unhealthy on a Tuesday and PRISM had already scheduled the service before I saw the alert. That would have been a week of downtime last year.',w:'Site supervisor · agriculture pilot'}
+];
+var tcI=0;
+function tcRender(){
+  document.getElementById('tcQuote').textContent=TESTS[tcI].q;
+  document.getElementById('tcWho').textContent=TESTS[tcI].w;
+  var dots=document.getElementById('tcDots');
+  dots.innerHTML=TESTS.map(function(_,i){return '<i class="'+(i===tcI?'on':'')+'"></i>';}).join('');
+}
+function tcMove(d){tcI=(tcI+d+TESTS.length)%TESTS.length;tcRender();}
+tcRender();
+if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  setInterval(function(){tcMove(1);},7000);
+}
+</script>
+
+<!-- Version badge — small, muted, bottom-right. SemVer (https://semver.org).
+     Kept in step with the app's window.PRISM_VERSION source of truth. -->
+<style>
+#vb-badge{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);z-index:40;
+  font-family:var(--mono,ui-monospace,monospace);font-size:10px;line-height:1;letter-spacing:.04em;
+  color:var(--t3,#6b7580);opacity:.72;}
+#vb-badge a{color:inherit;text-decoration:none;transition:color .15s,opacity .15s;}
+#vb-badge a:hover{color:var(--accent,#e0a80d);opacity:1;}
+@media print{#vb-badge{display:none;}}
+</style>
+<div id="vb-badge"><a href="https://semver.org" target="_blank" rel="noopener noreferrer" title="PRISM v11.0.0" aria-label="Application version 11.0.0">v11.0.0</a></div>
+</body>
+</html>
