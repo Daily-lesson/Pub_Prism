@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<!--
+  PRISM — public landing page
+  Copyright (c) 2026 SCOT ALLEN CARL JR. All rights reserved.
+
+  Proprietary. No right to copy, redistribute, create derivative works, use
+  commercially, or use as machine-learning training data is granted.
+  Full terms: LICENSE. Third-party components: THIRD-PARTY-NOTICES.md.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self';"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="description" content="PRISM is the operations layer for a robotics fleet business: solution design, compliant scheduling, fleet health, value per action, and RaaS billing in one platform."/>
+<title>PRISM — The operations layer for a robotics fleet business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet"/></noscript>
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+<style>
+/* ============ Signal tokens (DESIGN-STANDARDS.md §2 — source of truth) ============ */
+:root{
+  --bg0:#0a0b0e;--bg1:#12141a;--bg2:#171a21;--bg3:#20242e;
+  --b1:#20242d;--b2:#2b303b;--b3:#3a414f;
+  --t0:#f5f6f8;--t1:#c0c6d0;--t2:#828b99;--t3:#565e6c;
+  --green:#2fd8a0;--green2:#12b981;--green3:#0a3d2c;
+  --blue:#5aa2ff;--blue2:#2f7fe6;--blue3:#0e2947;
+  --amber:#f59e0b;--amber2:#c77f08;--amber3:#3a2708;
+  --red:#f06548;--red2:#d3492a;--red3:#3d150c;
+  --purple:#a78bfa;--purple2:#7c5cf0;--purple3:#221a45;
+  --teal:#2dd4bf;--teal2:#0fa99a;--teal3:#0a3a37;
+  --accent:#f59e0b;--accent-hi:#fbbf24;--accent-lo:#b8760a;
+  --accent-ink:#1a1206;
+  --accent-tint:rgba(245,158,11,.12);
+  --accent-ring:rgba(245,158,11,.40);
+  --accent-grad:linear-gradient(135deg,#fbbf24 0%,#f59e0b 55%,#e07d0a 100%);
+  --elev1:0 1px 2px rgba(0,0,0,.40);
+  --elev2:0 6px 22px -6px rgba(0,0,0,.55);
+  --elev3:0 18px 50px -12px rgba(0,0,0,.62);
+  --glow:0 0 0 1px var(--accent-ring),0 8px 28px -8px rgba(245,158,11,.35);
+  --mono:'DM Mono',monospace;
+  --head:'Syne',sans-serif;
+  --ui:'Inter',system-ui,-apple-system,sans-serif;
+  --r:8px;--r2:14px;--r3:20px;
+}
+html.light{
+  --bg0:#f7f5f1;--bg1:#ffffff;--bg2:#f3f0ea;--bg3:#e9e4db;
+  --b1:#e8e3d9;--b2:#d9d2c5;--b3:#c2b8a7;
+  --t0:#1b1915;--t1:#3d3931;--t2:#6a6357;--t3:#948c7d;
+  --green:#0f9d6b;--green2:#0a7d54;--green3:#d5f4e6;
+  --blue:#2563eb;--blue2:#1d4ed8;--blue3:#dbeafe;
+  --amber:#c2740a;--amber2:#9a5b07;--amber3:#fbeecf;
+  --red:#d64530;--red2:#b3341f;--red3:#fbe2dc;
+  --purple:#7c3aed;--purple2:#6025c9;--purple3:#ede4ff;
+  --teal:#0d9488;--teal2:#0a7268;--teal3:#d1f3ef;
+  --accent:#d9820b;--accent-hi:#f59e0b;--accent-lo:#a5620a;
+  --accent-ink:#2a1c07;
+  --accent-tint:rgba(217,130,11,.12);
+  --accent-ring:rgba(217,130,11,.34);
+  --accent-grad:linear-gradient(135deg,#f5a623 0%,#e0870c 55%,#c4720a 100%);
+  --elev1:0 1px 2px rgba(60,48,24,.06);
+  --elev2:0 8px 24px -8px rgba(60,48,24,.14);
+  --elev3:0 20px 52px -14px rgba(60,48,24,.18);
+  --glow:0 0 0 1px var(--accent-ring),0 10px 28px -10px rgba(217,130,11,.28);
+}
+/* ============ base ============ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg0);color:var(--t0);font-family:var(--ui);line-height:1.55;-webkit-text-size-adjust:100%;overflow-x:hidden}
+:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg0),0 0 0 4px var(--accent-ring);border-radius:4px}
+::selection{background:var(--accent-tint)}
+button{font-family:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+h1,h2,h3{font-family:var(--head);letter-spacing:-.01em;line-height:1.15}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:var(--r);padding:13px 24px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s,border-color .15s;border:1px solid transparent;min-height:44px}
+.btn-pri{background:var(--accent-grad);color:var(--accent-ink);box-shadow:var(--elev1)}
+.btn-pri:hover{transform:translateY(-1px);box-shadow:var(--glow)}
+.btn-sec{background:transparent;color:var(--t1);border-color:var(--b2)}
+.btn-sec:hover{border-color:var(--accent);color:var(--accent)}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:99px}
+.badge-live{background:var(--accent-tint);color:var(--accent)}
+.badge-ok{background:var(--green3);color:var(--green)}
+.badge-warn{background:var(--amber3);color:var(--amber)}
+.badge-crit{background:var(--red3);color:var(--red)}
+/* ============ scroll reveal ============ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);transition-delay:calc(var(--i,0) * 60ms)}
+.reveal.in{opacity:1;transform:none}
+/* ============ nav ============ */
+.nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg1) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .2s,box-shadow .2s}
+.nav.scrolled{border-bottom-color:var(--b1);box-shadow:var(--elev1)}
+.nav-in{display:flex;align-items:center;gap:20px;height:60px;max-width:1120px;margin:0 auto;padding:0 24px}
+.logo{display:flex;align-items:center;gap:9px;min-height:44px;font-family:var(--head);font-weight:800;font-size:15px;letter-spacing:.05em;color:var(--t0);text-decoration:none}
+.logo-mark{width:26px;height:26px;border-radius:7px;background:var(--accent-grad);display:grid;place-items:center;color:var(--accent-ink);font-family:var(--mono);font-size:13px;font-weight:500}
+.nav-links{display:flex;gap:4px;margin-left:8px}
+.nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);text-decoration:none;padding:8px 12px;border-radius:6px}
+.nav-links a:hover{color:var(--accent);background:var(--accent-tint)}
+.nav-sp{flex:1}
+.theme-btn{background:transparent;border:1px solid var(--b2);color:var(--t2);width:44px;height:44px;flex-shrink:0;border-radius:8px;cursor:pointer;font-size:14px;line-height:1}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+.nav .btn{padding:9px 16px;font-size:13px;min-height:36px}
+/* ============ hero ============ */
+.hero{padding:72px 0 40px;position:relative}
+.hero::before{content:"";position:absolute;inset:-120px 0 auto;height:480px;background:radial-gradient(600px 300px at 70% 10%,var(--accent-tint),transparent 70%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:48px;align-items:center;position:relative}
+.hero h1{font-size:clamp(30px,4.6vw,50px);font-weight:800;margin-bottom:18px}
+.hero h1 em{font-style:normal;background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:17px;color:var(--t1);max-width:50ch;margin-bottom:28px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.hero-note{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:.04em}
+/* — animated command-center mock — */
+.cc{background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r2);box-shadow:var(--elev3);overflow:hidden}
+.cc-top{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--b1);background:var(--bg2)}
+.cc-dots{display:flex;gap:5px}
+.cc-dots i{width:9px;height:9px;border-radius:50%;background:var(--b3)}
+.cc-title{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}
+.cc-top .badge-live{font-size:11px;padding:4px 12px;font-weight:600}
+.cc-body{display:grid;grid-template-columns:1.25fr 1fr;gap:0}
+.cc-map{position:relative;border-right:1px solid var(--b1);min-height:280px;background:
+  linear-gradient(var(--b1) 1px,transparent 1px),linear-gradient(90deg,var(--b1) 1px,transparent 1px);
+  background-size:28px 28px;background-position:center}
+.cc-zone{position:absolute;border:1px dashed var(--b3);border-radius:8px;font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:4px 6px}
+.cc-bot{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 25%,transparent);transition:left 1.9s linear,top 1.9s linear}
+.cc-bot.warn{background:var(--amber);box-shadow:0 0 0 3px color-mix(in srgb,var(--amber) 25%,transparent)}
+.cc-bot::after{content:attr(data-id);position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:7px;color:var(--t2);white-space:nowrap}
+.cc-side{padding:14px;display:flex;flex-direction:column;gap:12px}
+.cc-kpi .kl{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}
+.cc-kpi .kv{font-family:var(--mono);font-size:26px;font-weight:500;color:var(--t0);font-variant-numeric:tabular-nums}
+.cc-kpi .kv b{color:var(--green);font-weight:500;font-size:13px}
+.cc-feed{flex:1;display:flex;flex-direction:column;gap:6px;overflow:hidden;min-height:130px}
+.cc-line{font-family:var(--mono);font-size:10px;color:var(--t1);display:flex;gap:8px;align-items:baseline;animation:feedin .5s ease}
+.cc-line .tt{color:var(--t3);flex-shrink:0}
+.cc-line .val{color:var(--green)}
+.cc-line .warnv{color:var(--amber)}
+@keyframes feedin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* ============ sections ============ */
+section{padding:clamp(72px,9vw,128px) 0}
+section[id]{scroll-margin-top:76px}
+.sec-head{max-width:62ch;margin-bottom:40px}
+.sec-head h2{font-size:clamp(24px,3.2vw,34px);font-weight:800;margin-bottom:10px}
+.sec-head p{color:var(--t1);font-size:15px;max-width:62ch}
+/* six tiles — THE 90% */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:28px}
+.tile{background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r2);padding:20px;box-shadow:var(--elev1);position:relative;overflow:hidden}
+.tile::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-grad)}
+.tile .tl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.tile p{font-size:13.5px;color:var(--t1)}
+.sec-close{font-size:15px;color:var(--t1);max-width:62ch}
+.sec-close b{color:var(--t0)}
+/* ============ lifecycle ============ */
+.lc-row{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center;padding:40px 0;border-top:1px solid var(--b1)}
+.lc-row:first-of-type{border-top:none;padding-top:0}
+.lc-row:nth-of-type(even) .lc-text{order:2}
+.lc-row:nth-of-type(even) .lc-vig{order:1}
+.lc-num{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.1em;margin-bottom:8px}
+.lc-text h3{font-size:19px;margin-bottom:12px}
+.lc-text p{font-size:14.5px;color:var(--t1);max-width:52ch}
+/* — product vignettes — */
+.vig{background:var(--bg0);border:1px solid var(--b1);border-radius:var(--r2);padding:16px}
+.vig-cap{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.06em;margin-top:12px}
+.rb-card{background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r2);padding:14px}
+.rb-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:10px}
+.rb-name{font-family:var(--mono);font-size:13px;color:var(--t0)}
+.rb-name span{color:var(--t3);font-size:10px;white-space:nowrap}
+.rb-sub{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t2);margin-top:4px}
+.hs-row{display:flex;align-items:center;gap:12px;margin:10px 0}
+.hs-num{font-family:var(--mono);font-size:34px;font-weight:500;color:var(--red);font-variant-numeric:tabular-nums}
+.hs-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.hs-bar i{display:block;height:100%;border-radius:3px;background:var(--red);width:38%}
+.rb-meta{display:flex;gap:14px;font-family:var(--mono);font-size:11px;color:var(--t1);flex-wrap:wrap}
+.rb-meta b{color:var(--t0);font-weight:500}
+.al-row{display:flex;gap:10px;align-items:flex-start;background:var(--bg0);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px;margin-top:12px}
+.al-row .ai{color:var(--t2)}
+.al-row .at{font-size:12px;color:var(--t1);font-family:var(--mono)}
+.al-row .at span{display:block;font-family:var(--mono);font-size:10px;color:var(--t2);margin-top:2px}
+.chk{list-style:none;display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.chk li{display:flex;gap:10px;align-items:baseline;font-family:var(--mono);font-size:11.5px;color:var(--t1)}
+.chk .ok{color:var(--green)}
+.chk .wr{color:var(--amber)}
+.m-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r);padding:12px 14px;margin-top:10px}
+.m-row:first-child{margin-top:0}
+.m-row .mn{font-size:13px;color:var(--t0)}
+.m-row .mn span{display:block;font-family:var(--mono);font-size:10px;color:var(--t2);margin-top:2px}
+.m-val{font-family:var(--mono);font-size:20px;color:var(--green);font-variant-numeric:tabular-nums;font-weight:500}
+.chain-line{font-family:var(--mono);font-size:11px;color:var(--t1);display:block;padding:5px 0}
+/* ============ cortex band ============ */
+.cortex-band{background:linear-gradient(180deg,var(--bg1),var(--bg0));border-top:1px solid var(--b1);border-bottom:1px solid var(--b1)}
+.cortex-band .sec-head{margin-bottom:0}
+/* ============ proof / built ============ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:16px}
+.stat{background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r2);padding:20px;position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-grad)}
+.stat .kv{font-family:var(--mono);font-size:26px;font-weight:500;color:var(--t0);font-variant-numeric:tabular-nums}
+.stat .kl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t2);margin-top:6px;line-height:1.5}
+.stats-cap{font-family:var(--mono);font-size:11.5px;color:var(--t2);line-height:1.7;max-width:78ch;padding:14px 16px;background:var(--bg1);border:1px solid var(--b1);border-radius:var(--r);margin-bottom:44px}
+.cap-list{display:grid;grid-template-columns:1fr 1fr;gap:14px 32px;margin-bottom:28px}
+.cap-list li{list-style:none;font-family:var(--mono);font-size:12.5px;color:var(--t1);line-height:1.6;padding-left:18px;position:relative}
+.cap-list li::before{content:"—";position:absolute;left:0;color:var(--accent)}
+.cap-list em{font-style:normal;color:var(--t2)}
+.built-line{font-size:14.5px;color:var(--t1);max-width:78ch;margin-bottom:12px}
+/* ============ where it stands ============ */
+.status-sec{background:var(--bg1);border-top:1px solid var(--b1);border-bottom:1px solid var(--b1)}
+.status-copy p{font-size:16px;color:var(--t1);max-width:62ch;margin-bottom:18px}
+.status-copy p:last-of-type{margin-bottom:0}
+.status-copy b{color:var(--t0)}
+/* ============ final CTA ============ */
+.final{text-align:center;padding:88px 0}
+.final h2{font-size:clamp(26px,3.4vw,38px);font-weight:800;margin-bottom:12px}
+.final p{color:var(--t1);margin-bottom:26px;font-size:15px}
+footer{border-top:1px solid var(--b1);padding:26px 0;font-family:var(--mono);font-size:11px;color:var(--t3)}
+footer .wrap{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+footer a{color:var(--t2);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+footer a:hover{color:var(--accent)}
+.footer-legal{border-top:1px solid var(--b1);padding-top:14px;margin-top:14px;font-size:10.5px;color:var(--t3);line-height:1.6}
+/* ============ responsive ============ */
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .tiles{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .lc-row{grid-template-columns:1fr;gap:24px}
+  .lc-row:nth-of-type(even) .lc-text{order:1}
+  .lc-row:nth-of-type(even) .lc-vig{order:2}
+  .cap-list{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .nav-links{display:none}
+  .hero{padding-top:44px}
+  .cc-body{grid-template-columns:1fr}
+  .cc-map{min-height:220px;border-right:none;border-bottom:1px solid var(--b1)}
+  .tiles{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  section{padding:52px 0}
+  .footer-legal{padding-bottom:env(safe-area-inset-bottom,0px)}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div id="navSentinel" style="position:absolute;top:0;left:0;height:1px;width:1px" aria-hidden="true"></div>
+
+<!-- ================= NAV ================= -->
+<nav class="nav" aria-label="Main" id="mainNav">
+  <div class="nav-in">
+    <a class="logo" href="#top">
+      <span class="logo-mark">▲</span> PRISM
+    </a>
+    <div class="nav-links">
+      <a href="#ninety">The 90%</a>
+      <a href="#how">How it works</a>
+      <a href="#built">What's built</a>
+      <a href="#status">Where it stands</a>
+    </div>
+    <span class="nav-sp"></span>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle light/dark theme" title="Toggle theme">◐</button>
+    <a class="btn btn-pri" href="index.html">Open the demo →</a>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="reveal" style="--i:0">
+      <div class="eyebrow">Robotics Operations Platform</div>
+      <h1>The robot is 10% of the job.<br/><em>PRISM is the other 90%.</em></h1>
+      <p class="hero-sub">Describe the problem in plain language. PRISM picks the platform and the sensor, shows you the payback, schedules the work against your rules, watches the fleet's health, and prices every run it does.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-pri" href="index.html">▶ Open the live demo →</a>
+        <a class="btn btn-sec" href="#how">See how it works</a>
+      </div>
+      <div class="hero-note">No signup. It's the real application running a simulated fleet, in your browser.</div>
+    </div>
+
+    <!-- animated command-center mock (simulated feed, honestly labeled) -->
+    <div class="cc reveal" style="--i:1" aria-hidden="true">
+      <div class="cc-top">
+        <span class="cc-dots"><i></i><i></i><i></i></span>
+        <span class="cc-title">PRISM · Command Center</span>
+        <span class="nav-sp"></span>
+        <span class="badge badge-live">● Simulated feed</span>
+      </div>
+      <div class="cc-body">
+        <div class="cc-map" id="ccMap">
+          <div class="cc-zone" style="left:6%;top:8%;width:42%;height:38%">Warehouse A</div>
+          <div class="cc-zone" style="left:56%;top:14%;width:36%;height:30%">Substation</div>
+          <div class="cc-zone" style="left:12%;top:56%;width:60%;height:34%">Yard · Perimeter</div>
+        </div>
+        <div class="cc-side">
+          <div class="cc-kpi">
+            <div class="kl">Value in motion</div>
+            <div class="kv">$<span id="ccTicker">1,284,900</span><b> ▲</b></div>
+          </div>
+          <div class="cc-kpi">
+            <div class="kl">Robots online</div>
+            <div class="kv" style="font-size:18px"><span style="color:var(--green)">21</span><span style="color:var(--t3)">/22</span></div>
+          </div>
+          <div class="cc-feed" id="ccFeed"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= THE 90% ================= -->
+<section id="ninety">
+  <div class="wrap">
+    <div class="sec-head reveal" style="--i:0">
+      <div class="eyebrow">The part nobody sells</div>
+      <h2>Buying the robot is the easy part.</h2>
+      <p>The people who need robots — facilities, warehousing, utilities, agriculture, security — don't know robots, and they shouldn't have to. What stalls a deployment is never the driving.</p>
+    </div>
+    <div class="tiles">
+      <div class="tile reveal" style="--i:1"><div class="tl">Which robot</div><p>Platform and sensor matched to the actual problem, not to a brochure.</p></div>
+      <div class="tile reveal" style="--i:2"><div class="tl">The money</div><p>Capex, opex, payback. Before anyone signs anything.</p></div>
+      <div class="tile reveal" style="--i:3"><div class="tl">The rules</div><p>OSHA, FAA Part 107, ISO 3691-4, ISO 10218 — and your own site rules.</p></div>
+      <div class="tile reveal" style="--i:4"><div class="tl">The work</div><p>What runs tonight, on which machine, and who said so.</p></div>
+      <div class="tile reveal" style="--i:5"><div class="tl">The upkeep</div><p>Which robot is about to fail in the middle of a job.</p></div>
+      <div class="tile reveal" style="--i:6"><div class="tl">The proof</div><p>What it delivered, what that was worth, and the invoice.</p></div>
+    </div>
+    <p class="sec-close reveal" style="--i:7">Today that's six spreadsheets and an email thread. <b>PRISM makes it one platform.</b></p>
+  </div>
+</section>
+
+<!-- ================= THE LIFECYCLE ================= -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head reveal" style="--i:0">
+      <div class="eyebrow">The lifecycle</div>
+      <h2>One loop, from the problem to the invoice.</h2>
+      <p>Grow → Deploy → Operate → Prove &amp; Bill → Govern. It isn't a diagram — it's the navigation inside the product.</p>
+    </div>
+
+    <!-- 01 GROW -->
+    <div class="lc-row">
+      <div class="lc-text reveal" style="--i:0">
+        <div class="lc-num">01 · GROW</div>
+        <h3>Tell it the problem. It designs the solution.</h3>
+        <p>"Inspection rounds eat our techs' time." PRISM matches platform against payload against the task, your environment, and the regulation that applies, then gives you fit, capex, opex and payback for each combination. Approve one and it becomes a use case, a deal in the pipeline, and a quote you can send.</p>
+      </div>
+      <div class="lc-vig reveal" style="--i:1">
+        <div class="vig">
+          <div class="rb-card">
+            <div class="rb-top">
+              <div class="rb-name">Solution — Substation inspection <span>· Quadruped + thermal</span></div>
+              <span class="badge badge-ok">92% fit</span>
+            </div>
+            <div class="rb-meta">
+              <span>Capex <b>$86.9K</b></span>
+              <span>Opex <b>$12.8K/yr</b></span>
+              <span>Payback <b>14 mo</b></span>
+            </div>
+          </div>
+        </div>
+        <p class="vig-cap">Illustrative. The demo runs this engine on numbers you type in.</p>
+      </div>
+    </div>
+
+    <!-- 02 DEPLOY -->
+    <div class="lc-row">
+      <div class="lc-text reveal" style="--i:0">
+        <div class="lc-num">02 · DEPLOY</div>
+        <h3>Sites, robots, and what's left to finish.</h3>
+        <p>Every site carries a rollout readiness score from its own checklist, sorted worst-first, so "what do we finish next" is the first thing on the screen instead of the last. Robots register once and show up on the map.</p>
+      </div>
+      <div class="lc-vig reveal" style="--i:1">
+        <div class="vig">
+          <div class="rb-card">
+            <div class="rb-top">
+              <div class="rb-name">Site rollout — Yard East <span>· trial</span></div>
+              <span class="badge badge-warn">62% ready</span>
+            </div>
+            <div class="hs-row">
+              <div class="hs-num" style="color:var(--accent)">62</div>
+              <div style="flex:1">
+                <div class="rb-sub">Readiness · checklist complete</div>
+                <div class="hs-bar"><i style="background:var(--accent);width:62%"></i></div>
+              </div>
+            </div>
+            <div class="rb-meta">
+              <span>Robots <b>4</b></span>
+              <span>Missions <b>11</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 OPERATE -->
+    <div class="lc-row">
+      <div class="lc-text reveal" style="--i:0">
+        <div class="lc-num">03 · OPERATE</div>
+        <h3>Compliant dispatch, then autonomy you can argue with.</h3>
+        <p>Every mission is checked against your assigned ruleset before it's created. A blocking rule refuses the mission — no row, no dispatch — and the refusal goes into the audit log. The scheduler and the integration hub run the same gate, so there is no automated-mission bypass lane. When the scheduler proposes an assignment it shows the score, the reasons, and why the other robot lost. It proposes; auto-apply is opt-in and off by default.</p>
+      </div>
+      <div class="lc-vig reveal" style="--i:1">
+        <div class="vig">
+          <div class="rb-card">
+            <div class="rb-top">
+              <div class="rb-name">Mission · Perimeter patrol <span>· Yard East</span></div>
+              <span class="badge badge-ok">✓ Compliant</span>
+            </div>
+            <div class="rb-sub">Ruleset · ISO 3691-4 (driverless industrial trucks / AMRs)</div>
+            <ul class="chk">
+              <li><span class="ok">✓</span> Speed limited to 1.2 m/s in shared pedestrian zones</li>
+              <li><span class="ok">✓</span> Emergency-stop reachability verified for route</li>
+              <li><span class="ok">✓</span> Operating window inside approved schedule</li>
+              <li><span class="wr">△</span> Night-shift lighting below recommended lux — <b style="color:var(--t0)">warn recorded</b>, not blocking</li>
+            </ul>
+            <div class="rb-meta">
+              <span style="color:var(--t3)">audit</span>
+              <span>MISSION_CREATED · chain #4,182 · hash-linked</span>
+            </div>
+            <div class="al-row">
+              <span class="ai">⊘</span>
+              <div class="at">AMR-3 not chosen <span>off-site (−50) · health −20 · slower (−12)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 PROVE & BILL -->
+    <div class="lc-row">
+      <div class="lc-text reveal" style="--i:0">
+        <div class="lc-num">04 · PROVE &amp; BILL</div>
+        <h3>Every run carries a number.</h3>
+        <p>Each mission is linked to the use case that justifies it, so a thirty-minute run isn't "activity" — it's a figure you can put in front of a CFO. Roll it up per site and it becomes an invoice: a per-robot subscription plus, if you want it, a share of the value delivered.</p>
+      </div>
+      <div class="lc-vig reveal" style="--i:1">
+        <div class="vig">
+          <div class="m-row">
+            <div class="mn">Thermal inspection — Substation B<span>Atlas-07 · 30 min runtime · completed 11:42</span></div>
+            <div class="m-val">+$2,400</div>
+          </div>
+          <div class="m-row">
+            <div class="mn">Inventory cycle-count — Warehouse A<span>AMR-3 · 22 min runtime · completed 11:18</span></div>
+            <div class="m-val">+$320</div>
+          </div>
+          <div class="m-row" style="border-color:color-mix(in srgb,var(--accent) 35%,transparent)">
+            <div class="mn"><b>Value today</b><span>17 actions across 3 sites</span></div>
+            <div class="m-val" style="color:var(--accent)">$9,840</div>
+          </div>
+        </div>
+        <p class="vig-cap">Illustrative. The demo computes these from missions you schedule. There are no customer results yet.</p>
+      </div>
+    </div>
+
+    <!-- 05 GOVERN -->
+    <div class="lc-row">
+      <div class="lc-text reveal" style="--i:0">
+        <div class="lc-num">05 · GOVERN</div>
+        <h3>Receipts, not assurances.</h3>
+        <p>Fleet decisions are written to a per-org, hash-chained audit log that a verifier re-walks on a schedule and reports gaps in. Tenants are isolated at the query layer, credentials are encrypted and write-only, outbound calls are SSRF-guarded, and the compliance rulesets tell you what applies at your size. <b>They're assistive checks, not certified safety systems — PRISM will never show you a green check it can't back up.</b></p>
+      </div>
+      <div class="lc-vig reveal" style="--i:1">
+        <div class="vig">
+          <div class="rb-card">
+            <span class="chain-line">chain #4,183 → prevHash 7f2a…e91c → hash 0b6d…44af</span>
+            <span class="chain-line">chain #4,184 → prevHash 0b6d…44af → hash c218…7a90</span>
+            <span class="chain-line">chain #4,185 → prevHash c218…7a90 → hash <span style="color:var(--green)">verified ✓</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CORTEX ================= -->
+<section class="cortex-band" id="cortex">
+  <div class="wrap">
+    <div class="sec-head reveal" style="--i:0">
+      <div class="eyebrow">Ask Cortex</div>
+      <h2>The advisor runs on your machine.</h2>
+      <p>PRISM ships its own small advisor model — 753 KB, trained on the product's own vocabulary, pinned by checksum. In the public demo it runs entirely inside your browser over WebAssembly: no external language model, and nothing you type leaves the page. Press ⌘K in the demo and ask it something.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHAT'S BUILT ================= -->
+<section id="built">
+  <div class="wrap">
+    <div class="sec-head reveal" style="--i:0">
+      <div class="eyebrow">What's actually built</div>
+      <h2>Numbers I can point at.</h2>
+    </div>
+    <div class="stats reveal" style="--i:1">
+      <div class="stat"><div class="kv">4</div><div class="kl">Compliance rulesets shipped and enforced at mission-create</div></div>
+      <div class="stat"><div class="kv">3</div><div class="kl">Vendor adapters behind one interface</div></div>
+      <div class="stat"><div class="kv">~1,350</div><div class="kl">Automated tests passing, with CI eval gates</div></div>
+      <div class="stat"><div class="kv">753 KB</div><div class="kl">Advisor model, running in your browser</div></div>
+    </div>
+    <div class="stats-cap reveal" style="--i:2">These are engineering figures from the codebase and its test suite — not production benchmarks, and not customer results. There are no customer results yet. The compliance rulesets are assistive checks, not certified safety systems.</div>
+
+    <ul class="cap-list reveal" style="--i:3">
+      <li>A robot's state is on screen in about a second, and every reading is kept. <em>(ingest → liveness → server-sent events → partitioned history)</em></li>
+      <li>A blocking compliance rule refuses a mission before it exists. No automated bypass lane.</li>
+      <li>A per-org hash-chained audit log, re-walked on a schedule by a verifier that reports gaps.</li>
+      <li>Health scores that raise an alert before a robot strands a job.</li>
+      <li>A scheduler that shows why this robot won and why the other one lost. It proposes; auto-apply is opt-in and off by default.</li>
+      <li>Multi-tenant isolation, SSO, MFA, encrypted write-only credentials, SSRF-guarded outbound calls, tiered entitlements.</li>
+    </ul>
+    <p class="built-line reveal" style="--i:4">Three vendor adapters behind one interface: ROS 2 / rosbridge, a generic-HTTP fallback for any REST vendor, and one named commercial fleet API.</p>
+    <p class="built-line reveal" style="--i:5">A real-hardware bridge is built and containerized — consumer robots pushing into the exact production ingest path a commercial platform uses. The first timed onboarding run is the next step.</p>
+  </div>
+</section>
+
+<!-- ================= STATUS ================= -->
+<section class="status-sec" id="status">
+  <div class="wrap">
+    <div class="sec-head reveal" style="--i:0">
+      <div class="eyebrow">Where this actually is</div>
+      <h2>Pre-revenue. No customers. Worth saying out loud.</h2>
+    </div>
+    <div class="status-copy reveal" style="--i:1">
+      <p>PRISM is built and running, and it has no customers. No pilots, no logos, no case studies. If you came here looking for a "trusted by" band, there isn't one, and I'm not going to make one up.</p>
+      <p>It's built by one person plus a staff of AI agents, nights and weekends. Around 1,350 automated tests and a set of CI gates are how that stays honest rather than fast and wrong.</p>
+      <p>What's next isn't more code — it's the first site. If you run a multi-robot operation and this looks like your problem, that's the conversation I want to have.</p>
+    </div>
+    <div class="hero-ctas reveal" style="--i:2; margin-top:26px">
+      <a class="btn btn-pri" href="index.html">Open the live demo →</a>
+      <a class="btn btn-sec" href="mailto:scoty65@gmail.com?subject=PRISM">Email me</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section class="final">
+  <div class="wrap reveal" style="--i:0">
+    <h2>See it before you believe any of this.</h2>
+    <p>The demo is the real product. Open it, go to Use Cases, and tell it what problem you have.</p>
+    <div class="hero-ctas" style="justify-content:center;margin-bottom:0">
+      <a class="btn btn-pri" href="index.html">Open the live demo →</a>
+    </div>
+    <div class="hero-note" style="margin-top:16px">No signup. Nothing to install. It runs in a labeled DEMO mode, every number in it is simulated, and nothing in it is a customer.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="flex-direction:column;align-items:stretch">
+    <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;width:100%">
+      <span>PRISM · The operations layer for a robotics fleet business</span>
+      <a href="index.html">Live demo</a>
+      <a href="#how">How it works</a>
+      <a href="#built">What's built</a>
+      <a href="mailto:scoty65@gmail.com?subject=PRISM">Email</a>
+      <span class="nav-sp"></span>
+      <span>Signal design system · adaptive light/dark</span>
+    </div>
+    <div class="footer-legal">PRISM does not control robots. Its compliance rulesets are assistive checks, not certified safety systems, and not a substitute for a site risk assessment.</div>
+  </div>
+</footer>
+
+<script>
+'use strict';
+/* ============ theme (initTheme pattern from DESIGN-STANDARDS.md) ============ */
+(function initTheme(){
+  var KEY='prism-landing-theme';
+  var saved=null; try{saved=localStorage.getItem(KEY);}catch(e){}
+  var mq=window.matchMedia('(prefers-color-scheme: light)');
+  function apply(mode){document.documentElement.classList.toggle('light',mode==='light');}
+  apply(saved||(mq.matches?'light':'dark'));
+  if(!saved&&mq.addEventListener)mq.addEventListener('change',function(e){apply(e.matches?'light':'dark');});
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var next=document.documentElement.classList.contains('light')?'dark':'light';
+    apply(next); try{localStorage.setItem(KEY,next);}catch(e){}
+  });
+})();
+
+/* ============ hero: simulated command center ============ */
+(function heroSim(){
+  var map=document.getElementById('ccMap');
+  var bots=[
+    {id:'ATLAS-07',x:62,y:22,warn:false},{id:'AMR-3',x:18,y:18,warn:false},
+    {id:'AMR-5',x:34,y:30,warn:true},{id:'ROVER-2',x:24,y:70,warn:false},
+    {id:'ROVER-4',x:58,y:74,warn:false}
+  ];
+  bots.forEach(function(b){
+    var el=document.createElement('div');
+    el.className='cc-bot'+(b.warn?' warn':'');
+    el.setAttribute('data-id',b.id);
+    el.style.left=b.x+'%';el.style.top=b.y+'%';
+    map.appendChild(el);b.el=el;
+  });
+  function wander(){
+    bots.forEach(function(b){
+      b.x=Math.max(4,Math.min(90,b.x+(Math.random()*22-11)));
+      b.y=Math.max(6,Math.min(86,b.y+(Math.random()*18-9)));
+      b.el.style.left=b.x+'%';b.el.style.top=b.y+'%';
+    });
+  }
+  var ticker=document.getElementById('ccTicker');
+  var value=1284900;
+  var feed=document.getElementById('ccFeed');
+  var events=[
+    ['11:42','val','Thermal inspection complete · Substation B · +$2,400'],
+    ['11:44','','Patrol dispatched · Yard East · ISO 3691-4 ✓'],
+    ['11:47','warnv','Health 38 · Atlas-07 · maintenance alert raised'],
+    ['11:49','val','Inventory cycle-count · Warehouse A · +$320'],
+    ['11:52','','Compliance gate · 1 warn recorded · not blocking'],
+    ['11:55','val','Perimeter patrol complete · +$180'],
+    ['11:57','','Battery 22% · Rover-2 returning to dock'],
+    ['12:01','val','Roof inspection complete · +$480']
+  ];
+  var ei=0;
+  function pushEvent(){
+    var e=events[ei++%events.length];
+    var line=document.createElement('div');
+    line.className='cc-line';
+    line.innerHTML='<span class="tt">'+e[0]+'</span><span class="'+e[1]+'">'+e[2]+'</span>';
+    feed.prepend(line);
+    while(feed.children.length>5)feed.removeChild(feed.lastChild);
+    if(e[1]==='val'){value+=Math.round(200+Math.random()*2300);ticker.textContent=value.toLocaleString('en-US');}
+  }
+  var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  pushEvent();pushEvent();pushEvent();
+  if(!reduced){setInterval(wander,2000);setInterval(pushEvent,2500);wander();}
+})();
+
+/* ============ scroll reveal ============ */
+(function reveal(){
+  var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els=document.querySelectorAll('.reveal');
+  if(reduced||!('IntersectionObserver' in window)){
+    els.forEach(function(el){el.classList.add('in');});
+    return;
+  }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){entry.target.classList.add('in');io.unobserve(entry.target);}
+    });
+  },{threshold:0.12,rootMargin:'0px 0px -8% 0px'});
+  els.forEach(function(el){io.observe(el);});
+})();
+
+/* ============ nav scrolled state ============ */
+(function navScroll(){
+  var nav=document.getElementById('mainNav');
+  var sentinel=document.getElementById('navSentinel');
+  if(!nav||!sentinel||!('IntersectionObserver' in window))return;
+  var io=new IntersectionObserver(function(entries){
+    nav.classList.toggle('scrolled',!entries[0].isIntersecting);
+  },{threshold:0,rootMargin:'-12px 0px 0px 0px'});
+  io.observe(sentinel);
+})();
+</script>
+
+<!-- Version badge — small, muted, bottom-right. SemVer (https://semver.org).
+     Kept in step with the app's window.PRISM_VERSION source of truth. -->
+<style>
+#vb-badge{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);z-index:40;
+  font-family:var(--mono,ui-monospace,monospace);font-size:10px;line-height:1;letter-spacing:.04em;
+  color:var(--t3,#6b7580);opacity:.72;}
+#vb-badge a{color:inherit;text-decoration:none;transition:color .15s,opacity .15s;}
+#vb-badge a:hover{color:var(--accent,#e0a80d);opacity:1;}
+@media print{#vb-badge{display:none;}}
+</style>
+<div id="vb-badge"><a href="https://semver.org" target="_blank" rel="noopener noreferrer" title="PRISM v11.0.0" aria-label="Application version 11.0.0">v11.0.0</a></div>
+</body>
+</html>

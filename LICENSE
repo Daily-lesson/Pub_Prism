@@ -1,0 +1,124 @@
+PRISM PROPRIETARY LICENCE
+Version 1.0 — 7 August 2026
+
+Copyright (c) 2026 SCOT ALLEN CARL JR. All rights reserved.
+
+
+1. WHAT THIS COVERS
+
+   "the Software" means the PRISM robotics-operations platform in this
+   repository and every artefact generated from it, including but not limited
+   to:
+
+   (a) the single-file frontend application `PRISM-v10-complete.html`, its
+       service worker, manifest, and the public landing page `landing.html`;
+   (b) the `prism-server` backend — source, database schema, migrations, and
+       configuration;
+   (c) the PRISM Cortex model artefacts (`*.onnx`, tokenizer, labels, ledger),
+       the datasets and registry they are compiled from, and the trained
+       weights themselves;
+   (d) the product's data models and calibrated content, including the
+       platform and payload catalogues, the task/technology tables and their
+       modelled value figures, the compliance rulesets, the incident
+       playbooks, and the verified use-case library;
+   (e) the documentation, design standards, and specifications in this
+       repository.
+
+   Third-party components redistributed alongside the Software are NOT covered
+   by this licence and remain under their own terms. See THIRD-PARTY-NOTICES.md.
+
+2. RESERVATION OF RIGHTS
+
+   All rights are reserved. No licence, express or implied, is granted by
+   publication, by the source being readable in a browser, or by any repository
+   being publicly visible.
+
+   Publishing a public demonstration build (see Section 4) is a limited act of
+   publication for evaluation purposes. It is not a dedication to the public
+   domain, not an open-source release, and not a waiver of any right.
+
+3. WHAT YOU MAY NOT DO
+
+   Without the prior written permission of the copyright holder, you may not:
+
+   (a) copy, reproduce, or redistribute the Software or any substantial part
+       of it, in source or compiled form;
+   (b) create derivative works, adaptations, ports, or translations;
+   (c) use the Software, or any part of it, to build, train, evaluate, or
+       fine-tune a machine-learning model, or include it in any dataset used
+       for that purpose;
+   (d) use the Software commercially, or operate it as a service;
+   (e) sell, sublicence, rent, lease, or otherwise transfer any interest in it;
+   (f) remove, obscure, or alter any copyright, licence, or attribution notice;
+   (g) circumvent any technical measure that gates access to a feature, tier,
+       or tenant.
+
+   Clause (c) is stated explicitly because automated ingestion is the most
+   likely way this work is copied at scale, and silence on the point is
+   sometimes read as permission.
+
+4. WHAT YOU MAY DO
+
+   You may:
+
+   (a) view and read the publicly published demonstration build, and run it in
+       your own browser, for the sole purpose of evaluating PRISM;
+   (b) quote short excerpts for commentary, review, journalism, teaching, or
+       research, with attribution — where such use is permitted by the
+       applicable copyright exception (fair dealing, fair use, or the local
+       equivalent). This licence neither grants nor removes those exceptions;
+   (c) exercise any right that cannot lawfully be restricted in your
+       jurisdiction.
+
+   Reading the published demonstration build does not grant permission to
+   reimplement it. Ideas and functionality are not protected by copyright;
+   the specific expression in this repository is.
+
+5. IDEAS, KNOW-HOW, AND CONFIDENTIALITY
+
+   Nothing in this licence is a promise that the Software is a trade secret.
+   Material published in the demonstration build is, by definition, no longer
+   secret. Material NOT published — including the entire `prism-server`
+   backend, the training pipeline, and the operational configuration — remains
+   confidential, and any person given access to it under an agreement,
+   employment, or contract is bound by that agreement's confidentiality terms
+   in addition to this licence.
+
+6. NO WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+   PRISM's safety-adjacent features — human-robot collaboration interlocks,
+   geofencing, compliance rulesets, autonomous scheduling, simulation,
+   predictive maintenance, and incident playbooks — are assistive and
+   informational. They are not a certified safety system and must not be
+   relied upon as one. Numeric thresholds and modelled values shipped with the
+   Software are conservative illustrative defaults, not a substitute for a
+   site risk assessment or professional advice.
+
+7. LIMITATION OF LIABILITY
+
+   IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR
+   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE,
+   ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OF OR
+   OTHER DEALINGS IN THE SOFTWARE.
+
+8. RELATIONSHIP TO OTHER AGREEMENTS
+
+   Where a customer has signed an Order Form, subscription agreement, or other
+   written contract with the copyright holder, that agreement governs that
+   customer's use of the Software and prevails over this licence to the extent
+   of any conflict. This licence governs everyone else.
+
+9. GRANTING PERMISSION
+
+   Permission beyond Section 4 may be granted, and only in writing, by the
+   copyright holder. Requests: see the repository owner
+
+10. SEVERABILITY
+
+   If any provision of this licence is held unenforceable, the remaining
+   provisions continue in full force, and the unenforceable provision is
+   limited to the minimum extent necessary to make it enforceable.
