@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
   PRISM — public landing page
-  Copyright (c) 2026 SCOT ALLEN CARL JR. All rights reserved.
+  Copyright (c) 2026 [COMPANY LEGAL NAME]. All rights reserved.
 
   Proprietary. No right to copy, redistribute, create derivative works, use
   commercially, or use as machine-learning training data is granted.
@@ -102,6 +102,16 @@ h1,h2,h3{font-family:var(--head);letter-spacing:-.01em;line-height:1.15}
 .theme-btn{background:transparent;border:1px solid var(--b2);color:var(--t2);width:44px;height:44px;flex-shrink:0;border-radius:8px;cursor:pointer;font-size:14px;line-height:1}
 .theme-btn:hover{border-color:var(--accent);color:var(--accent)}
 .nav .btn{padding:9px 16px;font-size:13px;min-height:36px}
+/* Collapsed-nav menu: below 760px the links don't fit the 60px row — they used
+   to be display:none'd with NO replacement (menu choices simply lost). They now
+   collapse behind a ☰ button that opens them as a dropdown panel. */
+.nav-menu-btn{display:none;background:transparent;border:1px solid var(--b2);color:var(--t2);width:44px;height:44px;flex-shrink:0;border-radius:8px;cursor:pointer;font-size:16px;line-height:1}
+.nav-menu-btn:hover{border-color:var(--accent);color:var(--accent)}
+@media(max-width:760px){
+  .nav-links{display:none}
+  .nav-menu-btn{display:inline-flex;align-items:center;justify-content:center}
+  .nav.menu-open .nav-links{display:flex;position:absolute;top:60px;right:16px;flex-direction:column;gap:2px;margin-left:0;min-width:190px;background:var(--bg1);border:1px solid var(--b1);border-radius:10px;padding:8px;box-shadow:var(--elev3);z-index:60}
+}
 /* ============ hero ============ */
 .hero{padding:72px 0 40px;position:relative}
 .hero::before{content:"";position:absolute;inset:-120px 0 auto;height:480px;background:radial-gradient(600px 300px at 70% 10%,var(--accent-tint),transparent 70%);pointer-events:none}
@@ -226,7 +236,6 @@ footer a:hover{color:var(--accent)}
   .cap-list{grid-template-columns:1fr}
 }
 @media(max-width:560px){
-  .nav-links{display:none}
   .hero{padding-top:44px}
   .cc-body{grid-template-columns:1fr}
   .cc-map{min-height:220px;border-right:none;border-bottom:1px solid var(--b1)}
@@ -252,13 +261,14 @@ footer a:hover{color:var(--accent)}
     <a class="logo" href="#top">
       <span class="logo-mark">▲</span> PRISM
     </a>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <a href="#ninety">The 90%</a>
       <a href="#how">How it works</a>
       <a href="#built">What's built</a>
       <a href="#status">Where it stands</a>
     </div>
     <span class="nav-sp"></span>
+    <button class="nav-menu-btn" id="navMenuBtn" aria-label="Menu" aria-haspopup="true" aria-expanded="false" aria-controls="navLinks">☰</button>
     <button class="theme-btn" id="themeBtn" aria-label="Toggle light/dark theme" title="Toggle theme">◐</button>
     <a class="btn btn-pri" href="index.html">Open the demo →</a>
   </div>
@@ -648,6 +658,25 @@ footer a:hover{color:var(--accent)}
     nav.classList.toggle('scrolled',!entries[0].isIntersecting);
   },{threshold:0,rootMargin:'-12px 0px 0px 0px'});
   io.observe(sentinel);
+})();
+
+/* ============ collapsed-nav menu (≤760px) ============ */
+(function navMenu(){
+  var nav=document.getElementById('mainNav');
+  var btn=document.getElementById('navMenuBtn');
+  if(!nav||!btn)return;
+  function close(){nav.classList.remove('menu-open');btn.setAttribute('aria-expanded','false');}
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=nav.classList.toggle('menu-open');
+    btn.setAttribute('aria-expanded',String(open));
+  });
+  document.querySelectorAll('#navLinks a').forEach(function(a){a.addEventListener('click',close);});
+  document.addEventListener('click',function(e){
+    if(nav.classList.contains('menu-open')&&e.target instanceof Element&&!e.target.closest('#mainNav'))close();
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  window.addEventListener('resize',close);
 })();
 </script>
 

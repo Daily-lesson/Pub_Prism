@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
   PRISM — Robotics Operations Dashboard
-  Copyright (c) 2026 SCOT ALLEN CARL JR. All rights reserved.
+  Copyright (c) 2026 [COMPANY LEGAL NAME]. All rights reserved.
 
   Proprietary. This file is a single self-contained document by design, so its
   source is readable — that is an architectural choice, not a licence. No right
@@ -24336,6 +24336,48 @@ const QA_TESTS = [
       } catch(e) { window.PRISM_closeAdvisor && PRISM_closeAdvisor(); return { status:'fail', result:'threw', detail:String(e) }; }
     }
   },
+  {
+    // v11 module: navmore — prefix isolation: every nmore-prefixed id/class stays
+    // inside the top nav strip or the module's own fixed panel (same discipline
+    // as fh-/cwk-/pol-prefix-isolation).
+    id: 'nmore-prefix-isolation', section: 'F · Integration & Data Integrity',
+    name: 'navmore ids/classes stay inside #nav / #nmore-dd',
+    run: async () => {
+      try {
+        const els = document.querySelectorAll('[id^="nmore-"], [class*="nmore-"]');
+        const strays = Array.from(els).filter(el =>
+          !el.closest('#nav') && !el.closest('#nmore-dd') && el.id !== 'nmore-dd' && el.id !== 'prism-nmore-css');
+        if (strays.length) return { status:'fail', result:strays.length+' nmore-* element(s) outside the nav/panel', detail:strays.map(e=>e.id||e.className).join(', ') };
+        return { status:'pass', result:'✓ all nmore-* elements scoped to the nav strip / panel', detail:'' };
+      } catch(e){ return { status:'fail', result:'threw', detail:String(e) }; }
+    }
+  },
+  {
+    // v11 module: navmore — the split is honest: a huge width shows every tab and
+    // no More button; a narrow width moves trailing tabs into More without losing
+    // any (visible + hidden = the full gated candidate set) and never collapses
+    // the whole strip. Uses the module's own forced-width seam, then restores.
+    id: 'nmore-overflow-honest', section: 'F · Integration & Data Integrity',
+    name: 'nav tabs that don\'t fit collapse into More; none are lost',
+    run: async () => {
+      try {
+        if (typeof window.PRISM__nmoreForTest !== 'function') return { status:'skip', result:'navmore module not loaded', detail:'' };
+        const tabsEl = document.getElementById('desktop-tabs');
+        if (!tabsEl || getComputedStyle(tabsEl).display === 'none') return { status:'skip', result:'nav strip hidden at this width (mobile hamburger owns nav)', detail:'' };
+        const wide = window.PRISM__nmoreForTest(100000);
+        if (!wide) return { status:'fail', result:'forced-width update returned null', detail:'' };
+        if (wide.moreShown || wide.hidden !== 0) return { status:'fail', result:'More shown at effectively infinite width', detail:JSON.stringify(wide) };
+        const totalTabs = wide.visible;
+        const narrow = window.PRISM__nmoreForTest(300);
+        if (!narrow || !narrow.moreShown || narrow.hidden === 0) return { status:'fail', result:'narrow width did not produce an overflow More menu', detail:JSON.stringify(narrow) };
+        if (narrow.visible + narrow.hidden !== totalTabs) return { status:'fail', result:'tabs lost in the split: '+narrow.visible+'+'+narrow.hidden+' ≠ '+totalTabs, detail:'' };
+        if (narrow.visible < 1) return { status:'fail', result:'split collapsed the whole strip', detail:'' };
+        const items = document.querySelectorAll('#nmore-dd .nmore-dd-item, #nmore-dd .nmore-dd-sec');
+        if (!items.length) return { status:'fail', result:'More panel rendered no entries for '+narrow.hidden+' hidden tab(s)', detail:'' };
+        return { status:'pass', result:'✓ '+totalTabs+' tabs → '+narrow.visible+' visible + '+narrow.hidden+' in More at 300px; none lost', detail:'' };
+      } catch(e){ return { status:'fail', result:'threw', detail:String(e) }; }
+    }
+  },
 ];
 
 // ── QA runner ─────────────────────────────────────────────────────────────────
@@ -38914,6 +38956,346 @@ html.light .mmap-canvas-empty{background-image:
     window.PRISM__cwkRenderForTest = function(m, bs){ mode=m; blocks=bs||[]; render(); }; // QA hook
     refresh();
   } catch(e){ console.warn('[coworkcal] init failed, legacy lane retained', e); }
+})();
+</script>
+
+<!-- ═══ v11 module: navmore — responsive "More ▾" overflow for the top nav ═══
+     Grep: "v11 module: navmore".  Prefix nmore- (grep-verified 0-hit before this module).
+     THE GAP THIS CLOSES: between 769px and ~1400px the .ntabs strip overflow-x
+     scrolls with an INVISIBLE scrollbar (scrollbar-width:none, line ~351), so
+     tabs past the window edge silently vanish — menu choices are "lost" on
+     resize with no affordance at all. Below 768px the hamburger already owns
+     the nav, so this module is desktop-only (CSS force-hides it ≤768px).
+     A second, worse form of the same disease: the 836px .nacts actions row is
+     flex-shrink:0, so below ~1150px it squeezed the flex:1 tab strip to ZERO
+     width — every menu choice gone with no affordance. The module therefore
+     budgets the WHOLE nav row: tabs get priority, then trailing .nacts
+     buttons; whatever doesn't fit is hidden (class nmore-hidden — NEVER
+     style.display, which applyRoleTabs owns and resets each pass) and listed
+     in a fixed-position panel behind a trailing "More ▾" button (tabs first,
+     then an Actions section). Pinned, never collapsed: role switch,
+     read-only pill, E-stop indicator, profile menu. Panel items forward clicks to the
+     ORIGINAL buttons (el.click()), so role gating, entitlements, band labels,
+     active-state and navigation semantics are reused wholesale, never copied.
+     Recompute: rAF-throttled resize, a wrap of applyRoleTabs (runs after the
+     role→band→labels chain, the sizeband wrap precedent) and a wrap of
+     showView (active-state changes). If this module fails, the pre-existing
+     invisible scroll remains as the fallback — strictly no worse than before. -->
+<style id="prism-nmore-css">
+/* ═══ v11 module: navmore — styles (nmore- prefix) ═══ */
+.nmore-hidden{display:none!important;}
+#nmore-btn{
+  padding:5px 12px;font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--t2);border:none;background:transparent;cursor:pointer;font-family:var(--mono);
+  transition:all .15s;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;
+  display:flex;align-items:center;gap:4px;min-height:34px;
+}
+#nmore-btn:hover{color:var(--t0);}
+#nmore-btn.active{color:var(--green);border-bottom-color:var(--green);}
+#nmore-btn.open .ng-arrow{transform:rotate(180deg);}
+#nmore-dd{
+  position:fixed;min-width:200px;max-height:70vh;overflow-y:auto;
+  background:var(--bg2);border:1px solid var(--b2);border-radius:var(--r2);
+  padding:4px 0;z-index:905;box-shadow:0 8px 24px rgba(0,0,0,.4);
+  opacity:0;pointer-events:none;transform:translateY(-6px);
+  transition:opacity .15s,transform .15s;
+}
+#nmore-dd.open{opacity:1;pointer-events:all;transform:translateY(0);}
+.nmore-dd-item{
+  display:block;width:100%;padding:10px 14px;font-size:10px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--t2);border:none;background:transparent;
+  cursor:pointer;font-family:var(--mono);transition:all .12s;text-align:left;
+  white-space:nowrap;min-height:40px;touch-action:manipulation;
+}
+.nmore-dd-item:hover{color:var(--t0);background:var(--bg3);}
+.nmore-dd-item.active{color:var(--green);}
+.nmore-dd-sec{
+  padding:8px 14px 3px;font-size:8px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--t3);font-family:var(--mono);border-top:1px solid var(--b1);margin-top:3px;
+}
+.nmore-dd-sec:first-child{border-top:none;margin-top:0;}
+@media(max-width:768px){#nmore-btn,#nmore-dd{display:none!important;}}
+</style>
+<script>
+/* ═══ v11 module: navmore ═══ */
+(function(){
+'use strict';
+var tabsEl = document.getElementById('desktop-tabs');
+if(!tabsEl) return;
+
+var btn = null, dd = null;
+
+function ensureEls(){
+  if(btn && dd) return;
+  btn = document.createElement('button');
+  btn.id = 'nmore-btn';
+  btn.className = 'nmore-hidden';
+  btn.setAttribute('aria-haspopup','menu');
+  btn.setAttribute('aria-expanded','false');
+  btn.setAttribute('title','More navigation — items that don’t fit this window width');
+  btn.innerHTML = '⋯ More <span class="ng-arrow">▼</span>';
+  btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
+  tabsEl.appendChild(btn);
+  dd = document.createElement('div');
+  dd.id = 'nmore-dd';
+  dd.setAttribute('role','menu');
+  dd.setAttribute('aria-label','More navigation');
+  document.body.appendChild(dd);
+}
+
+/* Top-level strip items this module may collapse (never its own button). */
+function topLevelItems(){
+  return Array.prototype.filter.call(tabsEl.children, function(el){
+    return el.id !== 'nmore-btn' &&
+      (el.classList.contains('ntab') || el.classList.contains('ntab-group'));
+  });
+}
+/* Collapsible action-row buttons (.nacts direct BUTTON children: the export/
+   Recalc/theme buttons + the runtime-injected ⌘K and 🧠 launchers). The
+   role switch, read-only pill, E-stop indicator and profile menu are PINNED —
+   they are status/identity surfaces, not menu commands. Measured because the
+   836px actions row is flex-shrink:0: below ~1150px it squeezed the flex:1
+   tab strip to literally ZERO width, which is the worst form of "menu choices
+   lost on resize" this module exists to fix. */
+function collapsibleActions(){
+  var nacts = document.querySelector('#nav .nacts');
+  if(!nacts) return [];
+  return Array.prototype.filter.call(nacts.children, function(el){
+    return el.tagName === 'BUTTON';
+  });
+}
+/* Hidden by role/entitlement/band gating (their mechanism is style.display). */
+function gateHidden(el){ return el.style.display === 'none'; }
+function containsActive(el){
+  return el.classList.contains('active') || !!el.querySelector('.active');
+}
+function actionLabel(el){
+  var txt = (el.textContent || '').trim();
+  if(txt.length >= 3) return txt;
+  var t = el.title || el.getAttribute('aria-label') || '';
+  return (txt + ' ' + t).trim() || 'Action';
+}
+
+function position(){
+  if(!btn || !dd) return;
+  var r = btn.getBoundingClientRect();
+  dd.style.top = Math.round(r.bottom + 4) + 'px';
+  var left = Math.min(Math.round(r.right - dd.offsetWidth), window.innerWidth - dd.offsetWidth - 8);
+  dd.style.left = Math.max(8, left) + 'px';
+}
+function close(){
+  if(dd) dd.classList.remove('open');
+  if(btn){ btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+}
+function toggle(){
+  if(!dd || !btn) return;
+  var opening = !dd.classList.contains('open');
+  if(typeof window.closeAllDropdowns === 'function'){ try{ closeAllDropdowns(); }catch(e){} }
+  if(opening){
+    position();
+    dd.classList.add('open');
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded','true');
+    var first = dd.querySelector('.nmore-dd-item');
+    if(first) first.focus();
+  } else close();
+}
+
+function addItem(label, active, onPick){
+  var it = document.createElement('button');
+  it.className = 'nmore-dd-item' + (active ? ' active' : '');
+  it.setAttribute('role','menuitem');
+  it.textContent = label;
+  it.addEventListener('click', function(){
+    close();
+    onPick();
+    schedule();
+  });
+  dd.appendChild(it);
+}
+function addSection(label){
+  var sec = document.createElement('div');
+  sec.className = 'nmore-dd-sec';
+  sec.textContent = label;
+  dd.appendChild(sec);
+}
+
+function renderPanel(overflowTabs, overflowActs){
+  dd.textContent = '';
+  overflowTabs.forEach(function(el){
+    if(el.classList.contains('ntab')){
+      addItem(el.textContent.trim(), containsActive(el), function(){ el.click(); });
+    } else {
+      var gbtn = el.querySelector('.ntab-group-btn');
+      var label = gbtn ? gbtn.textContent.replace(/▼/g,'').trim() : '';
+      if(label) addSection(label);
+      el.querySelectorAll('.ntab-dd-item').forEach(function(it){
+        if(gateHidden(it)) return; /* role/band-hidden items stay hidden here too */
+        addItem(it.textContent.trim(), it.classList.contains('active'), function(){ it.click(); });
+      });
+    }
+  });
+  if(overflowActs.length){
+    addSection('Actions');
+    overflowActs.forEach(function(el){
+      addItem(actionLabel(el), false, function(){ el.click(); });
+    });
+  }
+}
+
+/* Core split — tabs get budget priority, then trailing action buttons; both
+   overflow into the panel. forcedAvail is the QA test seam — production
+   passes nothing. */
+function update(forcedAvail){
+  ensureEls();
+  /* ≤768px the strip is display:none (hamburger owns the nav) — nothing to
+     do. NB: computed display, NOT clientWidth — pre-fix, a squeezed desktop
+     width left the strip VISIBLE at 0px wide, which must trigger the split,
+     not skip it. */
+  if(forcedAvail == null && getComputedStyle(tabsEl).display === 'none'){ return null; }
+  var navEl = document.getElementById('nav');
+  var items = topLevelItems();
+  var acts = collapsibleActions();
+  items.forEach(function(el){ el.classList.remove('nmore-hidden'); });
+  acts.forEach(function(el){ el.classList.remove('nmore-hidden'); });
+  btn.classList.add('nmore-hidden');
+  var candidates = items.filter(function(el){ return !gateHidden(el); });
+  var actCands = acts.filter(function(el){ return !gateHidden(el); });
+  var tabW = candidates.map(function(el){ return el.offsetWidth; });
+  var actW = actCands.map(function(el){ return el.offsetWidth; });
+  var GAP = 1;  /* .ntabs{gap:1px} */
+  var AGAP = 5; /* .nacts{gap:5px} */
+  var totalTabs = tabW.reduce(function(a,b){ return a + b; }, 0) + Math.max(0, candidates.length - 1) * GAP;
+  var totalActs = actW.reduce(function(a,b){ return a + b + AGAP; }, 0);
+
+  var avail;
+  if(forcedAvail != null){
+    avail = forcedAvail;
+  } else {
+    /* Everything in #nav except the strip and the collapsible actions is
+       immovable (brand, toggles, role switch, pills, profile). */
+    var othersW = 0;
+    Array.prototype.forEach.call(navEl.children, function(el){
+      if(el !== tabsEl) othersW += el.offsetWidth;
+    });
+    actW.forEach(function(w){ othersW -= w + AGAP; });
+    avail = navEl.clientWidth - 28 /* nav padding */ - othersW - 8 /* slack */;
+  }
+
+  if(totalTabs + totalActs <= avail){
+    close();
+    dd.textContent = '';
+    btn.classList.remove('active');
+    return { visible: candidates.length, hidden: 0, actsHidden: 0, moreShown: false };
+  }
+
+  btn.classList.remove('nmore-hidden');
+  var moreW = btn.offsetWidth || 84;
+  var budget = avail - moreW - GAP;
+  /* Strict prefix split, charging the budget only for what stays visible:
+     once one item overflows, everything after it does too. */
+  var used = 0, clipped = false;
+  var overflowTabs = [];
+  candidates.forEach(function(el, i){
+    if(!clipped){
+      var next = used + tabW[i] + (used ? GAP : 0);
+      if(next <= budget){ used = next; return; }
+      clipped = true;
+    }
+    el.classList.add('nmore-hidden');
+    overflowTabs.push(el);
+  });
+  /* Never collapse the whole strip — the first tab always stays. */
+  if(overflowTabs.length === candidates.length && candidates.length){
+    candidates[0].classList.remove('nmore-hidden');
+    overflowTabs.shift();
+    used = tabW[0];
+  }
+  var overflowActs = [];
+  var aClipped = false;
+  actCands.forEach(function(el, i){
+    if(!aClipped){
+      var next = used + actW[i] + AGAP;
+      if(next <= budget){ used = next; return; }
+      aClipped = true;
+    }
+    el.classList.add('nmore-hidden');
+    overflowActs.push(el);
+  });
+  renderPanel(overflowTabs, overflowActs);
+  btn.classList.toggle('active', overflowTabs.some(containsActive));
+  return {
+    visible: candidates.length - overflowTabs.length,
+    hidden: overflowTabs.length,
+    actsHidden: overflowActs.length,
+    moreShown: true
+  };
+}
+
+var raf = 0;
+function schedule(){
+  if(raf) return;
+  raf = requestAnimationFrame(function(){ raf = 0; try{ update(); }catch(e){ console.warn('[navmore] update failed', e); } });
+}
+
+/* QA seam: run the split against a synthetic width, report, then restore. */
+window.PRISM__nmoreForTest = function(forcedWidth){
+  var res = update(forcedWidth);
+  schedule(); /* restore the real layout on the next frame */
+  return res;
+};
+
+/* ── Wiring ── */
+document.addEventListener('click', function(e){
+  if(!dd || !dd.classList.contains('open')) return;
+  var t = e.target;
+  if(t instanceof Element && !t.closest('#nmore-btn') && !t.closest('#nmore-dd')) close();
+});
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+window.addEventListener('resize', function(){ close(); schedule(); });
+tabsEl.addEventListener('scroll', function(){ close(); }, {passive:true});
+/* The actions row changes shape at runtime — the ⌘K/🧠 launchers are injected
+   after load, and the read-only/E-stop pills toggle style.display. Re-split
+   when that happens (attributeFilter excludes class, so this module's own
+   nmore-hidden toggles can't loop it). */
+(function observeActs(){
+  var nactsEl = document.querySelector('#nav .nacts');
+  if(!nactsEl || typeof MutationObserver !== 'function') return;
+  new MutationObserver(schedule).observe(nactsEl, {
+    childList: true, subtree: false, attributes: true, attributeFilter: ['style']
+  });
+})();
+
+/* After every role→entitlement→band→labels pass (which resets style.display
+   and rewrites labels), re-split. Same wrap discipline as sizeband (guarded). */
+(function wrapRoleTabs(){
+  var orig = window.applyRoleTabs;
+  if(typeof orig !== 'function' || orig.__nmoreWrapped) return;
+  window.applyRoleTabs = function(){
+    var r = orig.apply(this, arguments);
+    schedule();
+    return r;
+  };
+  window.applyRoleTabs.__nmoreWrapped = true;
+})();
+/* Active-tab changes flow through showView — keep More's active state live. */
+(function wrapShowView(){
+  var orig = window.showView;
+  if(typeof orig !== 'function' || orig.__nmoreWrapped) return;
+  window.showView = function(){
+    var r = orig.apply(this, arguments);
+    schedule();
+    return r;
+  };
+  window.showView.__nmoreWrapped = true;
+})();
+
+try{ ensureEls(); }catch(e){ console.warn('[navmore] init failed — invisible-scroll fallback retained', e); }
+schedule();
+window.addEventListener('load', schedule);
+if(document.fonts && document.fonts.ready && document.fonts.ready.then){
+  document.fonts.ready.then(function(){ schedule(); });
+}
 })();
 </script>
 
