@@ -1,0 +1,15 @@
+# Cortex trainer — Python, dev/CI-only. Never a runtime dependency of the package: the
+# runtime stays pure ONNX (onnxruntime-node / onnxruntime-web).
+#
+# Pinned to the exact versions the trainer was verified with, so `pip install -r
+# train/requirements.txt` reproduces the same toolchain (a different torch/onnxruntime build
+# can move the last bit of a trained weight — see README.md "Determinism").
+#
+# CPU-only torch: install from PyTorch's CPU wheel index to avoid the multi-GB CUDA
+# transitive dependencies (see README.md "Environment setup"):
+#   pip install --index-url https://download.pytorch.org/whl/cpu torch==2.14.0
+#   pip install -r train/requirements.txt
+torch==2.14.0
+onnx==1.22.0
+onnxruntime==1.30.0
+numpy==2.4.6
