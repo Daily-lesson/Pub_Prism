@@ -1,0 +1,725 @@
+{
+  "config": {
+    "version": "1",
+    "lower": true,
+    "maxLen": 12,
+    "padId": 0,
+    "unkId": 1,
+    "padToken": "<pad>",
+    "unkToken": "<unk>",
+    "vocab": {
+      "3": 24,
+      "2024": 25,
+      "how": 2,
+      "do": 3,
+      "i": 4,
+      "find": 5,
+      "the": 6,
+      "reports": 7,
+      "for": 8,
+      "north": 9,
+      "campus": 10,
+      "book": 11,
+      "a": 12,
+      "room": 13,
+      "in": 14,
+      "east": 15,
+      "wing": 16,
+      "this": 17,
+      "week": 18,
+      "export": 19,
+      "data": 20,
+      "café": 21,
+      "straße": 22,
+      "日本": 23,
+      "ticket": 26,
+      "open": 27,
+      "is": 28,
+      "hello": 29,
+      "thanks": 30,
+      "naïve": 31,
+      "über": 32,
+      "ελληνικά": 33
+    }
+  },
+  "cases": [
+    {
+      "text": "how do i find the reports",
+      "words": [
+        "how",
+        "do",
+        "i",
+        "find",
+        "the",
+        "reports"
+      ],
+      "ids": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "How Do I Find The Reports",
+      "words": [
+        "how",
+        "do",
+        "i",
+        "find",
+        "the",
+        "reports"
+      ],
+      "ids": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "show me the reports for North campus",
+      "words": [
+        "show",
+        "me",
+        "the",
+        "reports",
+        "for",
+        "north",
+        "campus"
+      ],
+      "ids": [
+        1,
+        1,
+        6,
+        7,
+        8,
+        9,
+        10,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "book a room in the east wing, this week!",
+      "words": [
+        "book",
+        "a",
+        "room",
+        "in",
+        "the",
+        "east",
+        "wing",
+        "this",
+        "week"
+      ],
+      "ids": [
+        11,
+        12,
+        13,
+        14,
+        6,
+        15,
+        16,
+        17,
+        18,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "export   data",
+      "words": [
+        "export",
+        "data"
+      ],
+      "ids": [
+        19,
+        20,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "",
+      "words": [],
+      "ids": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "   ",
+      "words": [],
+      "ids": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "!!! ??? ...",
+      "words": [],
+      "ids": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "ticket #3 is open",
+      "words": [
+        "ticket",
+        "3",
+        "is",
+        "open"
+      ],
+      "ids": [
+        26,
+        24,
+        28,
+        27,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "in 2024 we export data",
+      "words": [
+        "in",
+        "2024",
+        "we",
+        "export",
+        "data"
+      ],
+      "ids": [
+        14,
+        25,
+        1,
+        19,
+        20,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "café straße",
+      "words": [
+        "café",
+        "straße"
+      ],
+      "ids": [
+        21,
+        22,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "Café STRASSE",
+      "words": [
+        "café",
+        "strasse"
+      ],
+      "ids": [
+        21,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "日本 東京",
+      "words": [
+        "日本",
+        "東京"
+      ],
+      "ids": [
+        23,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "naïve über",
+      "words": [
+        "naïve",
+        "über"
+      ],
+      "ids": [
+        31,
+        32,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "ελληνικά data",
+      "words": [
+        "ελληνικά",
+        "data"
+      ],
+      "ids": [
+        33,
+        20,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "hello 😀 thanks",
+      "words": [
+        "hello",
+        "thanks"
+      ],
+      "ids": [
+        29,
+        30,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "😀😀",
+      "words": [],
+      "ids": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "a-b-c",
+      "words": [
+        "a",
+        "b",
+        "c"
+      ],
+      "ids": [
+        12,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "don't open the ticket",
+      "words": [
+        "don",
+        "t",
+        "open",
+        "the",
+        "ticket"
+      ],
+      "ids": [
+        1,
+        1,
+        27,
+        6,
+        26,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "e.g. reports_for_2024",
+      "words": [
+        "e",
+        "g",
+        "reports",
+        "for",
+        "2024"
+      ],
+      "ids": [
+        1,
+        1,
+        7,
+        8,
+        25,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "the the the the the the the the the the the the the the",
+      "words": [
+        "the",
+        "the",
+        "the",
+        "the",
+        "the",
+        "the",
+        "the",
+        "the",
+        "the",
+        "the",
+        "the",
+        "the",
+        "the",
+        "the"
+      ],
+      "ids": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "text": "how do i find the reports for the north campus this week please",
+      "words": [
+        "how",
+        "do",
+        "i",
+        "find",
+        "the",
+        "reports",
+        "for",
+        "the",
+        "north",
+        "campus",
+        "this",
+        "week",
+        "please"
+      ],
+      "ids": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        6,
+        9,
+        10,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "x1 y2 z3",
+      "words": [
+        "x1",
+        "y2",
+        "z3"
+      ],
+      "ids": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "ROOM room Room",
+      "words": [
+        "room",
+        "room",
+        "room"
+      ],
+      "ids": [
+        13,
+        13,
+        13,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "открыть отчёт",
+      "words": [
+        "открыть",
+        "отчёт"
+      ],
+      "ids": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "reports\tfor\nnorth",
+      "words": [
+        "reports",
+        "for",
+        "north"
+      ],
+      "ids": [
+        7,
+        8,
+        9,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "١٢٣ arabic-indic digits",
+      "words": [
+        "١٢٣",
+        "arabic",
+        "indic",
+        "digits"
+      ],
+      "ids": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "hello,world",
+      "words": [
+        "hello",
+        "world"
+      ],
+      "ids": [
+        29,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "thanks!!",
+      "words": [
+        "thanks"
+      ],
+      "ids": [
+        30,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "text": "Ⅻ roman numeral",
+      "words": [
+        "ⅻ",
+        "roman",
+        "numeral"
+      ],
+      "ids": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

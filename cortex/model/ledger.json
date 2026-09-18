@@ -1,0 +1,182 @@
+{
+  "version": "0.3.0",
+  "createdAtNote": "Trained via `python cortex-train/train.py` \u2014 see cortex-train/README.md for the exact reproducible command.",
+  "onnx": {
+    "file": "prism-cortex-0.3.0.onnx",
+    "sha256": "2e2a4ec70abb6ad3d7fc39ce77789920c6aefdd3891a3e27f2e8fcf7d53df87d",
+    "bytes": 758534,
+    "quantized": true
+  },
+  "tokenizer": {
+    "file": "prism-cortex-0.3.0.tokenizer.json",
+    "sha256": "770ae748b241163fd2eda572f84e1341d67ad965e7038ce246fb46af73483134"
+  },
+  "labels": {
+    "file": "prism-cortex-0.3.0.labels.json",
+    "sha256": "62fc497faf00441e39e4aeb3a2ac9cf7d05f56b0813c63a0b9da9c22a0e13090"
+  },
+  "trainedFrom": {
+    "registryHash": "be04c0c2035522564ef1236f043f1475a843595960523c328a40c247ff5f6aae",
+    "datasetHash": "201dea3fad94613b7fb66ca5b377cf16f253467c8fd945d47983f4c799234ecb",
+    "seed": 42,
+    "split": {
+      "train": 4462,
+      "val": 957,
+      "test": 957
+    }
+  },
+  "modelConfig": {
+    "vocabSize": 1609,
+    "maxLen": 26,
+    "embedDim": 128,
+    "gruHidden": 96,
+    "numIntents": 23,
+    "numSlotLabels": 13,
+    "paramCount": 359396,
+    "epochs": 80
+  },
+  "metrics": {
+    "inDistribution": {
+      "intentAccuracy": 0.9592476489028213,
+      "macroF1": 0.9552706260936547,
+      "perIntentF1": {
+        "connect_robots": 0.9457364341085271,
+        "add_site": 1.0,
+        "design_solution": 0.9801980198019802,
+        "schedule_missions": 0.9538461538461538,
+        "watch_fleet": 0.9814814814814815,
+        "billing_setup": 0.9310344827586207,
+        "compliance_setup": 0.9666666666666666,
+        "connect_integrations": 0.9090909090909091,
+        "track_deals": 0.8363636363636363,
+        "run_wizard": 1.0,
+        "fleet_status": 0.9130434782608695,
+        "robot_health": 0.9696969696969697,
+        "idle_robots": 0.9696969696969697,
+        "mission_status": 0.983050847457627,
+        "billing_status": 0.9836065573770492,
+        "compliance_status": 0.9836065573770492,
+        "pipeline_status": 0.9206349206349207,
+        "site_count": 1.0,
+        "value_delivered": 0.955223880597015,
+        "utilization_advice": 0.9696969696969697,
+        "create_mission": 0.9946524064171123,
+        "greeting": 0.90625,
+        "out_of_domain": 0.9176470588235294
+      },
+      "slotF1": 0.9883608147429679,
+      "slotPrecision": 0.982642237222758,
+      "slotRecall": 0.9941463414634146,
+      "perSlotF1": {
+        "O": 0.998477157360406,
+        "platform": 0.9914529914529915,
+        "payload": 1.0,
+        "taskType": 0.9836888331242158,
+        "view": 1.0,
+        "sitePhrase": 0.9874686716791979,
+        "schedulePhrase": 0.9866666666666666
+      }
+    },
+    "realistic": {
+      "intentAccuracy": 0.8695652173913043,
+      "n": 115,
+      "perIntentAccuracy": {
+        "connect_robots": 1.0,
+        "add_site": 1.0,
+        "design_solution": 1.0,
+        "schedule_missions": 0.8,
+        "watch_fleet": 0.8,
+        "billing_setup": 0.6,
+        "compliance_setup": 1.0,
+        "connect_integrations": 1.0,
+        "track_deals": 0.8,
+        "run_wizard": 0.8,
+        "fleet_status": 0.6,
+        "robot_health": 1.0,
+        "idle_robots": 0.8,
+        "mission_status": 0.8,
+        "billing_status": 1.0,
+        "compliance_status": 1.0,
+        "pipeline_status": 1.0,
+        "site_count": 1.0,
+        "value_delivered": 0.4,
+        "utilization_advice": 1.0,
+        "create_mission": 0.6,
+        "greeting": 1.0,
+        "out_of_domain": 1.0
+      },
+      "confusionTopMisses": [
+        {
+          "gold": "create_mission",
+          "pred": "schedule_missions",
+          "count": 2
+        },
+        {
+          "gold": "value_delivered",
+          "pred": "connect_robots",
+          "count": 2
+        },
+        {
+          "gold": "billing_setup",
+          "pred": "track_deals",
+          "count": 1
+        },
+        {
+          "gold": "billing_setup",
+          "pred": "watch_fleet",
+          "count": 1
+        },
+        {
+          "gold": "fleet_status",
+          "pred": "billing_status",
+          "count": 1
+        },
+        {
+          "gold": "fleet_status",
+          "pred": "idle_robots",
+          "count": 1
+        },
+        {
+          "gold": "idle_robots",
+          "pred": "out_of_domain",
+          "count": 1
+        },
+        {
+          "gold": "mission_status",
+          "pred": "fleet_status",
+          "count": 1
+        },
+        {
+          "gold": "run_wizard",
+          "pred": "out_of_domain",
+          "count": 1
+        },
+        {
+          "gold": "schedule_missions",
+          "pred": "create_mission",
+          "count": 1
+        },
+        {
+          "gold": "track_deals",
+          "pred": "pipeline_status",
+          "count": 1
+        },
+        {
+          "gold": "value_delivered",
+          "pred": "utilization_advice",
+          "count": 1
+        },
+        {
+          "gold": "watch_fleet",
+          "pred": "fleet_status",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "acceptanceFloor": {
+    "inDistributionIntentAccuracy": 0.9,
+    "inDistributionSlotF1": 0.9,
+    "realisticIntentAccuracy": 0.85
+  }
+}

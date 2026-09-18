@@ -1,0 +1,13 @@
+{
+  "name": "prism-a11y-tools",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Accessibility audit tools for PRISM single-file PWA",
+  "scripts": {
+    "a11y": "node run-axe.js ../PRISM-v10-complete.html"
+  },
+  "dependencies": {
+    "axe-core": "^4.7.0",
+    "puppeteer": "^20.0.0"
+  }
+}
