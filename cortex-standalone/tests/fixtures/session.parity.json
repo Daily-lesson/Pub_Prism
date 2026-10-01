@@ -1,0 +1,180 @@
+{
+  "artifactsDir": "examples/demo-dashboard/cortex/model",
+  "cases": [
+    {
+      "utterance": "how do i raise a ticket",
+      "intent": "create_ticket",
+      "intentConf": 0.912369966506958,
+      "slots": []
+    },
+    {
+      "utterance": "show me the reports for the north campus",
+      "intent": "find_reports",
+      "intentConf": 0.885025680065155,
+      "slots": [
+        {
+          "name": "region",
+          "value": "north campus",
+          "start": 28,
+          "end": 40
+        }
+      ]
+    },
+    {
+      "utterance": "book a room in the east wing for tomorrow",
+      "intent": "book_room",
+      "intentConf": 0.7623403668403625,
+      "slots": [
+        {
+          "name": "region",
+          "value": "east wing",
+          "start": 19,
+          "end": 28
+        }
+      ]
+    },
+    {
+      "utterance": "how many open tickets does facilities have",
+      "intent": "open_tickets_status",
+      "intentConf": 0.909953236579895,
+      "slots": [
+        {
+          "name": "department",
+          "value": "facilities",
+          "start": 27,
+          "end": 37
+        }
+      ]
+    },
+    {
+      "utterance": "is there an empty room right now",
+      "intent": "room_availability",
+      "intentConf": 0.9150968790054321,
+      "slots": []
+    },
+    {
+      "utterance": "what is the outstanding balance for finance",
+      "intent": "invoice_status",
+      "intentConf": 0.9032902121543884,
+      "slots": [
+        {
+          "name": "department",
+          "value": "finance",
+          "start": 36,
+          "end": 43
+        }
+      ]
+    },
+    {
+      "utterance": "is everything running",
+      "intent": "system_health",
+      "intentConf": 0.9214442372322083,
+      "slots": []
+    },
+    {
+      "utterance": "hello",
+      "intent": "greeting",
+      "intentConf": 0.9099621772766113,
+      "slots": []
+    },
+    {
+      "utterance": "what's the weather like in lisbon",
+      "intent": "out_of_domain",
+      "intentConf": 0.765972375869751,
+      "slots": []
+    },
+    {
+      "utterance": "the printer on the third floor is jammed, who do i tell",
+      "intent": "create_ticket",
+      "intentConf": 0.6953946352005005,
+      "slots": []
+    },
+    {
+      "utterance": "grab me a room at 3",
+      "intent": "book_room",
+      "intentConf": 0.6705978512763977,
+      "slots": []
+    },
+    {
+      "utterance": "pull up the graphs for the south campus",
+      "intent": "find_reports",
+      "intentConf": 0.60954350233078,
+      "slots": [
+        {
+          "name": "region",
+          "value": "south campus",
+          "start": 27,
+          "end": 39
+        }
+      ]
+    },
+    {
+      "utterance": "is the backlog big today",
+      "intent": "open_tickets_status",
+      "intentConf": 0.8397126197814941,
+      "slots": []
+    },
+    {
+      "utterance": "export everything from last month for the west wing",
+      "intent": "export_data",
+      "intentConf": 0.5778284072875977,
+      "slots": [
+        {
+          "name": "period",
+          "value": "last month",
+          "start": 23,
+          "end": 33
+        },
+        {
+          "name": "region",
+          "value": "west wing",
+          "start": 42,
+          "end": 51
+        }
+      ]
+    },
+    {
+      "utterance": "where do i generate a developer key",
+      "intent": "connect_integrations",
+      "intentConf": 0.8426476716995239,
+      "slots": []
+    },
+    {
+      "utterance": "Book The Boardroom For Friday",
+      "intent": "book_room",
+      "intentConf": 0.8726692199707031,
+      "slots": []
+    },
+    {
+      "utterance": "how much do we owe this quarter",
+      "intent": "invoice_status",
+      "intentConf": 0.9119970202445984,
+      "slots": [
+        {
+          "name": "period",
+          "value": "this quarter",
+          "start": 19,
+          "end": 31
+        }
+      ]
+    },
+    {
+      "utterance": "make tom an administrator",
+      "intent": "manage_users",
+      "intentConf": 0.8837783932685852,
+      "slots": []
+    },
+    {
+      "utterance": "launch the onboarding",
+      "intent": "run_setup",
+      "intentConf": 0.7747189998626709,
+      "slots": []
+    },
+    {
+      "utterance": "turn off email alerts",
+      "intent": "set_notifications",
+      "intentConf": 0.9384857416152954,
+      "slots": []
+    }
+  ]
+}

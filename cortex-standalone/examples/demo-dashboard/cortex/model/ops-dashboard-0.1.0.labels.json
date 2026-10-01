@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "intents": [
+    "create_ticket",
+    "find_reports",
+    "book_room",
+    "manage_users",
+    "connect_integrations",
+    "export_data",
+    "set_notifications",
+    "view_invoices",
+    "run_setup",
+    "open_tickets_status",
+    "room_availability",
+    "invoice_status",
+    "system_health",
+    "greeting",
+    "out_of_domain"
+  ],
+  "slots": [
+    "O",
+    "B-region",
+    "I-region",
+    "B-department",
+    "I-department",
+    "B-period",
+    "I-period"
+  ]
+}

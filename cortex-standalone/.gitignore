@@ -1,0 +1,9 @@
+node_modules/
+build/
+train/.venv/
+__pycache__/
+*.pyc
+*.onnx.int8.tmp
+.vitest/
+runtime/*.mjs
+runtime/*.wasm

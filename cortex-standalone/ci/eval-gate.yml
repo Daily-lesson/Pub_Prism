@@ -1,0 +1,49 @@
+# Cortex standalone — a GitHub Actions template for hosts that adopt the package.
+#
+# Copy into your repo's .github/workflows/ and set CORTEX_DIR / REGISTRY / ARTIFACTS.
+# Runs on every pull request, torch-free (Node + onnxruntime-node only): it recompiles the
+# dataset from the registry and refuses a ledger whose dataset hash no longer matches
+# ("the registry changed but nobody retrained"), re-verifies every artifact's sha256, and
+# fails if any intent's F1 regressed past the epsilon or the held-out accuracy fell below the
+# floor recorded in ledger.json. Retraining itself is a deliberate, reviewed step — see
+# train/README.md — never something CI commits on its own.
+name: cortex-eval-gate
+
+on:
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cortex-eval-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CORTEX_DIR: cortex-standalone
+  REGISTRY: registry/examples/ops-dashboard.registry.json
+  ARTIFACTS: examples/demo-dashboard/cortex/model
+
+jobs:
+  eval-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ${{ env.CORTEX_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: ${{ env.CORTEX_DIR }}/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      # The browser suite (tests/widget.test.ts) needs Playwright's Chromium and, for its ONNX
+      # cases, a Python with torch — neither is installed here, so it is excluded rather than
+      # left to fail; run it locally (`npm test`) or add `npx playwright install --with-deps
+      # chromium` + a Python step if you want it in CI.
+      - run: npx vitest run --exclude tests/widget.test.ts
+      - run: npx tsx cli/cortex.ts eval-gate "$REGISTRY" --artifacts "$ARTIFACTS"

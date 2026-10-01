@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.invalid/cortex/registry.schema.json",
+  "title": "Cortex registry",
+  "description": "How a host application describes itself to Cortex. See docs/CONTRACTS.md §1. Rules the schema cannot express (placeholders name declared slots, howto intents carry steps, status intents carry unavailable copy) are enforced by core/registry/validate.ts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["registryVersion", "app", "slots", "intents"],
+  "properties": {
+    "registryVersion": { "const": "1" },
+    "app": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slug", "name"],
+      "properties": {
+        "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "maxLength": 64 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "assistantName": { "type": "string", "minLength": 1, "maxLength": 120 }
+      }
+    },
+    "slots": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z][a-zA-Z0-9]*$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["vocab"],
+        "properties": {
+          "label": { "type": "string", "maxLength": 120 },
+          "vocab": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "label"],
+              "properties": {
+                "id": { "type": "string", "minLength": 1, "maxLength": 120 },
+                "label": { "type": "string", "minLength": 1, "maxLength": 200 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "intents": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "family", "label"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "maxLength": 64 },
+          "family": { "enum": ["howto", "status", "meta"] },
+          "label": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "slots": { "type": "array", "items": { "type": "string" }, "default": [] },
+          "keywords": { "type": "string", "maxLength": 2000, "default": "" },
+          "templates": { "type": "array", "items": { "type": "string", "minLength": 1, "maxLength": 300 }, "default": [] },
+          "paraphrases": { "type": "array", "items": { "type": "string", "minLength": 1, "maxLength": 300 }, "default": [] },
+          "answer": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["steps"],
+            "properties": {
+              "steps": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1, "maxLength": 500 } },
+              "links": { "$ref": "#/definitions/links" }
+            }
+          },
+          "status": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["unavailable"],
+            "properties": {
+              "unavailable": { "type": "string", "minLength": 1, "maxLength": 500 },
+              "links": { "$ref": "#/definitions/links" }
+            }
+          }
+        }
+      }
+    },
+    "heldout": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["utterance", "intent"],
+        "properties": {
+          "utterance": { "type": "string", "minLength": 1, "maxLength": 300 },
+          "intent": { "type": "string" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "links": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label", "target"],
+        "properties": {
+          "label": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "target": { "description": "Opaque JSON handed to host.navigate(target)." },
+          "need": { "type": "string", "maxLength": 80 }
+        }
+      }
+    }
+  }
+}

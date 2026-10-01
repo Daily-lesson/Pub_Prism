@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Northwind Ops — demo dashboard</title>
+<link rel="icon" href="data:," />
+<style>
+  :root { --bg:#f4f6fa; --fg:#1b1f27; --muted:#5f6675; --line:#dfe3ea; --card:#fff; --accent:#2f6fed; --warn:#b3541e; --ok:#1f7a4d; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0f1218; --fg:#e8ebf1; --muted:#9aa3b5; --line:#2c3340; --card:#171b23; --accent:#7aa2ff; --warn:#e0904f; --ok:#5ec48b; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.45 system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif; background:var(--bg); color:var(--fg); }
+  header { display:flex; flex-wrap:wrap; align-items:center; gap:14px; padding:12px 20px; border-bottom:1px solid var(--line); background:var(--card); }
+  header .brand { font-weight:800; letter-spacing:.02em; }
+  nav { display:flex; flex-wrap:wrap; gap:4px; flex:1; }
+  nav a { padding:7px 11px; border-radius:8px; color:inherit; text-decoration:none; }
+  nav a.on { background:var(--accent); color:#fff; }
+  header label { font-size:.9em; color:var(--muted); display:flex; align-items:center; gap:6px; }
+  main { max-width:1080px; margin:0 auto; padding:20px; overflow-x:auto; }
+  .note { border:1px dashed var(--warn); color:var(--warn); border-radius:10px; padding:8px 12px; font-size:.9em; margin-bottom:16px; }
+  h1 { font-size:1.35em; margin:6px 0 14px; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-bottom:18px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; }
+  .card .k { font-size:.8em; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+  .card .v { font-size:1.8em; font-weight:700; margin-top:4px; }
+  .card .s { color:var(--muted); font-size:.85em; }
+  table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  th, td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); }
+  th { font-size:.8em; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+  .ok { color:var(--ok); } .warn { color:var(--warn); }
+  footer { color:var(--muted); font-size:.85em; padding:20px; text-align:center; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Northwind Ops</div>
+  <nav id="nav">
+    <a href="#/tickets" data-route="/tickets">Tickets</a>
+    <a href="#/reports" data-route="/reports">Reports</a>
+    <a href="#/rooms" data-route="/rooms">Rooms</a>
+    <a href="#/billing" data-route="/billing">Billing</a>
+    <a href="#/status" data-route="/status">Status</a>
+    <a href="#/settings" data-route="/settings">Settings</a>
+  </nav>
+  <label><input type="checkbox" id="viewer-role" /> Viewer role (hides admin links)</label>
+</header>
+<main>
+  <div class="note" id="mock-note">All numbers on this page are mock data from an inline <code>DEMO_STATE</code> object — nothing here is live.</div>
+  <div id="page"></div>
+</main>
+<footer>Northwind Ops is a fictional company used to demonstrate the Cortex widget. Press Ctrl/Cmd+K or use the launcher (bottom right) to ask the assistant.</footer>
+
+<script>
+  // ── mock state — the ONLY source of any number the page or the assistant prints ─────────
+  var DEMO_STATE = {
+    tickets: [
+      { id: 'T-1041', title: 'Projector flickering in room 2.14', dept: 'Facilities', region: 'North campus', open: true },
+      { id: 'T-1042', title: 'VPN drops every hour', dept: 'IT', region: 'Main building', open: true },
+      { id: 'T-1043', title: 'Badge reader dead at east door', dept: 'Security', region: 'East wing', open: true },
+      { id: 'T-1044', title: 'Expense portal timeout', dept: 'Finance', region: 'Main building', open: false },
+      { id: 'T-1045', title: 'Leak under sink, kitchenette', dept: 'Facilities', region: 'South campus', open: true },
+      { id: 'T-1046', title: 'New starter laptop', dept: 'IT', region: 'West wing', open: true },
+      { id: 'T-1047', title: 'Onboarding paperwork missing', dept: 'HR', region: 'Main building', open: true },
+      { id: 'T-1048', title: 'Heating stuck on in lab 3', dept: 'Facilities', region: 'North campus', open: false },
+      { id: 'T-1049', title: 'Printer jam, 2nd floor', dept: 'Facilities', region: 'East wing', open: true },
+      { id: 'T-1050', title: 'Wi-Fi weak in atrium', dept: 'IT', region: 'North campus', open: true }
+    ],
+    rooms: [
+      { name: 'Boardroom', region: 'Main building', capacity: 14, free: false },
+      { name: 'Huddle A', region: 'Main building', capacity: 4, free: true },
+      { name: 'Lab view', region: 'North campus', capacity: 8, free: true },
+      { name: 'Glasshouse', region: 'North campus', capacity: 10, free: false },
+      { name: 'Quiet room', region: 'East wing', capacity: 2, free: true },
+      { name: 'Workshop', region: 'West wing', capacity: 20, free: true },
+      { name: 'Studio', region: 'South campus', capacity: 6, free: false }
+    ],
+    invoices: [
+      { id: 'INV-4471', vendor: 'Cleanco', dept: 'Facilities', amount: 1840, paid: false, period: 'this month' },
+      { id: 'INV-4472', vendor: 'NetLink', dept: 'IT', amount: 3200, paid: true, period: 'this month' },
+      { id: 'INV-4473', vendor: 'PrintPro', dept: 'Facilities', amount: 410, paid: false, period: 'last quarter' },
+      { id: 'INV-4474', vendor: 'PeopleFirst', dept: 'HR', amount: 990, paid: true, period: 'last quarter' },
+      { id: 'INV-4475', vendor: 'SafeGuard', dept: 'Security', amount: 2750, paid: false, period: 'this week' }
+    ],
+    systems: [
+      { name: 'Ticketing', status: 'up' },
+      { name: 'Room booking', status: 'up' },
+      { name: 'Email relay', status: 'degraded' },
+      { name: 'Badge access', status: 'up' },
+      { name: 'Billing sync', status: 'up' }
+    ]
+  };
+
+  // ── tiny helpers ─────────────────────────────────────────────────────────────────────────
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function money(n) { return '$' + n.toLocaleString('en-US'); }
+  function openTickets(filter) {
+    return DEMO_STATE.tickets.filter(function (t) {
+      if (!t.open) return false;
+      if (filter && filter.dept && t.dept.toLowerCase() !== filter.dept.toLowerCase()) return false;
+      if (filter && filter.region && t.region.toLowerCase() !== filter.region.toLowerCase()) return false;
+      return true;
+    });
+  }
+  function freeRooms(region) {
+    return DEMO_STATE.rooms.filter(function (r) { return r.free && (!region || r.region.toLowerCase() === region.toLowerCase()); });
+  }
+  function unpaid(filter) {
+    return DEMO_STATE.invoices.filter(function (i) {
+      if (i.paid) return false;
+      if (filter && filter.dept && i.dept.toLowerCase() !== filter.dept.toLowerCase()) return false;
+      if (filter && filter.period && i.period.toLowerCase() !== filter.period.toLowerCase()) return false;
+      return true;
+    });
+  }
+  function card(k, v, s) { return '<div class="card"><div class="k">' + esc(k) + '</div><div class="v">' + esc(v) + '</div>' + (s ? '<div class="s">' + esc(s) + '</div>' : '') + '</div>'; }
+
+  // ── pages ───────────────────────────────────────────────────────────────────────────────
+  var PAGES = {
+    '/tickets': function () {
+      var open = openTickets();
+      var byDept = {};
+      open.forEach(function (t) { byDept[t.dept] = (byDept[t.dept] || 0) + 1; });
+      return '<h1>Tickets</h1><div class="cards">' + card('Open tickets', open.length, 'across all departments') +
+        Object.keys(byDept).map(function (d) { return card(d, byDept[d], 'open'); }).join('') + '</div>' +
+        '<table><tr><th>Id</th><th>Title</th><th>Department</th><th>Location</th><th>State</th></tr>' +
+        DEMO_STATE.tickets.map(function (t) { return '<tr><td>' + esc(t.id) + '</td><td>' + esc(t.title) + '</td><td>' + esc(t.dept) + '</td><td>' + esc(t.region) + '</td><td class="' + (t.open ? 'warn' : 'ok') + '">' + (t.open ? 'open' : 'closed') + '</td></tr>'; }).join('') + '</table>';
+    },
+    '/tickets/new': function () { return '<h1>New ticket</h1><div class="card">This is where the new-ticket form would live in the fictional app.</div>'; },
+    '/reports': function () {
+      var open = openTickets().length, closed = DEMO_STATE.tickets.length - open;
+      return '<h1>Reports</h1><div class="cards">' + card('Tickets logged', DEMO_STATE.tickets.length) + card('Resolved', closed) + card('Still open', open) + card('Free rooms now', freeRooms().length) + '</div><div class="card">Charts would update here as you change region and period filters.</div>';
+    },
+    '/rooms': function () {
+      return '<h1>Rooms</h1><div class="cards">' + card('Free right now', freeRooms().length, 'of ' + DEMO_STATE.rooms.length + ' rooms') + '</div>' +
+        '<table><tr><th>Room</th><th>Location</th><th>Capacity</th><th>Now</th></tr>' +
+        DEMO_STATE.rooms.map(function (r) { return '<tr><td>' + esc(r.name) + '</td><td>' + esc(r.region) + '</td><td>' + r.capacity + '</td><td class="' + (r.free ? 'ok' : 'warn') + '">' + (r.free ? 'free' : 'booked') + '</td></tr>'; }).join('') + '</table>';
+    },
+    '/billing': function () {
+      var due = unpaid(), total = due.reduce(function (a, i) { return a + i.amount; }, 0);
+      return '<h1>Billing</h1><div class="cards">' + card('Unpaid invoices', due.length) + card('Outstanding', money(total)) + '</div>' +
+        '<table><tr><th>Invoice</th><th>Vendor</th><th>Department</th><th>Amount</th><th>Period</th><th>State</th></tr>' +
+        DEMO_STATE.invoices.map(function (i) { return '<tr><td>' + esc(i.id) + '</td><td>' + esc(i.vendor) + '</td><td>' + esc(i.dept) + '</td><td>' + money(i.amount) + '</td><td>' + esc(i.period) + '</td><td class="' + (i.paid ? 'ok' : 'warn') + '">' + (i.paid ? 'paid' : 'unpaid') + '</td></tr>'; }).join('') + '</table>';
+    },
+    '/status': function () {
+      return '<h1>Status</h1><table><tr><th>System</th><th>State</th></tr>' +
+        DEMO_STATE.systems.map(function (s) { return '<tr><td>' + esc(s.name) + '</td><td class="' + (s.status === 'up' ? 'ok' : 'warn') + '">' + esc(s.status) + '</td></tr>'; }).join('') + '</table>';
+    },
+    '/settings': function () { return '<h1>Settings</h1><div class="cards"><div class="card"><a href="#/settings/users">Users</a></div><div class="card"><a href="#/settings/integrations">Integrations</a></div><div class="card"><a href="#/settings/setup">Setup wizard</a></div></div>'; },
+    '/settings/users': function () { return '<h1>Settings → Users</h1><div class="card">Invite, roles and removal would be managed here.</div>'; },
+    '/settings/integrations': function () { return '<h1>Settings → Integrations</h1><div class="card">Connectors, webhooks and API keys would be managed here.</div>'; },
+    '/settings/setup': function () { return '<h1>Settings → Setup wizard</h1><div class="card">The onboarding wizard would run here.</div>'; },
+    '/me/notifications': function () { return '<h1>Notifications</h1><div class="card">Per-event email and push toggles would live here.</div>'; }
+  };
+
+  function currentRoute() {
+    var h = location.hash.replace(/^#/, '');
+    return h && h.charAt(0) === '/' ? h : '/tickets';
+  }
+  function render() {
+    var route = currentRoute();
+    var page = PAGES[route] || function () { return '<h1>Not found</h1><div class="card">No page at ' + esc(route) + '.</div>'; };
+    document.getElementById('page').innerHTML = page();
+    var links = document.querySelectorAll('#nav a');
+    for (var i = 0; i < links.length; i++) {
+      var r = links[i].getAttribute('data-route');
+      links[i].classList.toggle('on', route === r || route.indexOf(r + '/') === 0);
+    }
+  }
+  window.addEventListener('hashchange', render);
+  render();
+
+  // ── the host adapter the widget talks to ───────────────────────────────────────────────
+  function slotValue(slots, name) {
+    for (var i = 0; i < (slots || []).length; i++) if (slots[i].name === name) return slots[i].value;
+    return null;
+  }
+  var host = {
+    navigate: function (target) {
+      if (target && typeof target.route === 'string') { location.hash = target.route; render(); }
+    },
+    isAllowed: function (need) {
+      var viewer = document.getElementById('viewer-role').checked;
+      if (need === 'admin' && viewer) return false;
+      return true;
+    },
+    status: function (intentId, slots) {
+      var dept = slotValue(slots, 'department'), region = slotValue(slots, 'region'), period = slotValue(slots, 'period');
+      if (intentId === 'open_tickets_status') {
+        var open = openTickets({ dept: dept, region: region });
+        var scope = (dept ? ' for ' + dept : '') + (region ? ' in ' + region : '');
+        if (!dept && !region) {
+          var byDept = {};
+          open.forEach(function (t) { byDept[t.dept] = (byDept[t.dept] || 0) + 1; });
+          var parts = Object.keys(byDept).map(function (d) { return d + ' ' + byDept[d]; });
+          return 'There are ' + open.length + ' open tickets across all departments' + (parts.length ? ' (' + parts.join(', ') + ')' : '') + '.';
+        }
+        return 'There ' + (open.length === 1 ? 'is 1 open ticket' : 'are ' + open.length + ' open tickets') + scope + '.';
+      }
+      if (intentId === 'room_availability') {
+        var rooms = freeRooms(region);
+        if (!rooms.length) return 'No rooms are free right now' + (region ? ' in ' + region : '') + '.';
+        return rooms.length + ' room' + (rooms.length === 1 ? ' is' : 's are') + ' free right now' + (region ? ' in ' + region : '') + ': ' + rooms.map(function (r) { return r.name + ' (' + r.capacity + ')'; }).join(', ') + '.';
+      }
+      if (intentId === 'invoice_status') {
+        var due = unpaid({ dept: dept, period: period });
+        var total = due.reduce(function (a, i) { return a + i.amount; }, 0);
+        var scope2 = (dept ? ' for ' + dept : '') + (period ? ' ' + period : '');
+        if (!due.length) return 'Nothing is unpaid' + scope2 + '.';
+        return due.length + ' invoice' + (due.length === 1 ? ' is' : 's are') + ' unpaid' + scope2 + ', totalling ' + money(total) + ' (' + due.map(function (i) { return i.id + ' ' + i.vendor; }).join(', ') + ').';
+      }
+      if (intentId === 'system_health') {
+        var down = DEMO_STATE.systems.filter(function (s) { return s.status !== 'up'; });
+        if (!down.length) return 'All ' + DEMO_STATE.systems.length + ' systems are up.';
+        return (DEMO_STATE.systems.length - down.length) + ' of ' + DEMO_STATE.systems.length + ' systems are up; ' + down.map(function (s) { return s.name + ' is ' + s.status; }).join(', ') + '.';
+      }
+      return undefined; // unknown intent: let the widget use the registry's honest fallback copy
+    },
+    isLive: function () { return false; },
+    headers: function () { return {}; }
+  };
+
+  var mountOpts = {
+    registryUrl: '../../registry/examples/ops-dashboard.registry.json',
+    modelBase: 'cortex/model/',      // produced by the trainer; the page works keyword-only until it exists
+    runtimeBase: '../../runtime/',
+    confidenceGate: 0.6,
+    host: host,
+    ui: { launcher: true, hotkey: 'k', theme: 'auto' }
+  };
+  // Exposed for the browser tests (and for anyone poking at the console).
+  window.NORTHWIND = { state: DEMO_STATE, host: host, mountOpts: mountOpts, openTickets: openTickets, freeRooms: freeRooms, unpaid: unpaid };
+</script>
+<script src="../../widget/cortex-widget.js"></script>
+<script>
+  window.NORTHWIND.ready = window.Cortex.mount(window.NORTHWIND.mountOpts);
+</script>
+</body>
+</html>

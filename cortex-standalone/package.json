@@ -1,0 +1,33 @@
+{
+  "name": "cortex-standalone",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cortex — a compiled, registry-driven assistant for any dashboard: a small intent/slot classifier plus a deterministic answer planner, a zero-backend browser widget, and an optional Node server. Describe your app once; Cortex learns it.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "compile": "tsx cli/cortex.ts compile",
+    "eval-gate": "tsx cli/cortex.ts eval-gate",
+    "learn": "tsx cli/cortex.ts learn",
+    "validate": "tsx cli/cortex.ts validate",
+    "gen-runtime": "node cli/gen-runtime.js",
+    "train": "python3 train/train.py",
+    "serve": "tsx server/standalone.ts"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "onnxruntime-node": "^1.20.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.10.0",
+    "onnxruntime-web": "1.20.1",
+    "playwright": "1.56.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  }
+}

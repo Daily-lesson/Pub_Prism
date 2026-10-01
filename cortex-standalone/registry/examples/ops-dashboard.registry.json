@@ -1,0 +1,781 @@
+{
+  "registryVersion": "1",
+  "app": {
+    "slug": "ops-dashboard",
+    "name": "Northwind Ops",
+    "assistantName": "Ops Assistant"
+  },
+  "slots": {
+    "region": {
+      "label": "Region",
+      "vocab": [
+        { "id": "north", "label": "North campus" },
+        { "id": "south", "label": "South campus" },
+        { "id": "east", "label": "East wing" },
+        { "id": "west", "label": "West wing" },
+        { "id": "main", "label": "Main building" }
+      ]
+    },
+    "department": {
+      "label": "Department",
+      "vocab": [
+        { "id": "facilities", "label": "Facilities" },
+        { "id": "it", "label": "IT" },
+        { "id": "finance", "label": "Finance" },
+        { "id": "hr", "label": "HR" },
+        { "id": "security", "label": "Security" }
+      ]
+    },
+    "period": {
+      "label": "Period",
+      "vocab": [
+        { "id": "today", "label": "today" },
+        { "id": "week", "label": "this week" },
+        { "id": "month", "label": "this month" },
+        { "id": "quarter", "label": "last quarter" }
+      ]
+    }
+  },
+  "intents": [
+    {
+      "id": "create_ticket",
+      "family": "howto",
+      "label": "Raise a support ticket",
+      "slots": ["department", "region"],
+      "keywords": "ticket raise open create new request issue problem broken report fault helpdesk",
+      "templates": [
+        "how do i raise a ticket",
+        "how do i open a support ticket",
+        "how can i create a new ticket",
+        "where do i report a problem",
+        "how do i log an issue with {department}",
+        "how do i raise a ticket for {region}",
+        "i need to report something broken in {region}",
+        "how do i send a request to {department}",
+        "what is the way to file a new request",
+        "how do i tell {department} about a fault"
+      ],
+      "paraphrases": [
+        "something is broken, who do i tell",
+        "i want to log a new issue",
+        "how to submit a helpdesk request",
+        "the printer is jammed how do i get it fixed",
+        "need to open a ticket",
+        "where's the form for reporting problems",
+        "how do i ask facilities to fix the door",
+        "raise a new request please",
+        "start a ticket",
+        "how do i get someone to look at a fault",
+        "the elevator on the third floor is not working, where do i report it",
+        "who do i notify that a lamp has gone out in the corridor",
+        "log a fault with the security team",
+        "record a problem for maintenance",
+        "the heating is playing up, how do i flag it",
+        "a door is stuck, who should i tell",
+        "file a complaint about the broken window",
+        "submit an issue to the it desk",
+        "how do i notify facilities about a leak",
+        "there is a leak in the kitchen, where do i log it",
+        "the projector is dead, how do i get it looked at",
+        "tell the helpdesk something is wrong",
+        "where do i say that something needs fixing",
+        "flag a broken light"
+      ],
+      "answer": {
+        "steps": [
+          "Open Tickets from the top navigation.",
+          "Click New ticket, pick the department and the location, and describe the problem.",
+          "You'll get a ticket number; track it from the same list."
+        ],
+        "links": [
+          { "label": "Tickets", "target": { "route": "/tickets" }, "need": "tickets" },
+          { "label": "New ticket", "target": { "route": "/tickets/new" }, "need": "tickets" }
+        ]
+      }
+    },
+    {
+      "id": "find_reports",
+      "family": "howto",
+      "label": "Find the reports",
+      "slots": ["region", "period"],
+      "keywords": "reports report analytics numbers chart figures statistics summary export",
+      "templates": [
+        "how do i find the reports",
+        "where are the reports",
+        "show me the reports for {region}",
+        "how do i see the {period} numbers",
+        "where can i look at the figures for {region}",
+        "how do i get a summary for {period}",
+        "how do i pull up analytics for {region}",
+        "where is the {period} report",
+        "how can i view charts for {region}",
+        "how do i open reporting"
+      ],
+      "paraphrases": [
+        "i need the monthly numbers",
+        "where would i look at last month's figures",
+        "take me to analytics",
+        "how do i see how we're doing",
+        "show me some charts",
+        "where do the statistics live",
+        "i want to look at the report",
+        "how do i review the summary",
+        "open the reporting page",
+        "find the numbers for the east wing",
+        "bring up the graphs for facilities",
+        "show me the dashboard charts for the west wing",
+        "i want to see how many requests we closed this week",
+        "where's the analytics section",
+        "how are the numbers looking this quarter",
+        "show me the trend of requests over time",
+        "where do i find the performance summary",
+        "how many tickets did we handle last month",
+        "give me the statistics for the main building",
+        "open the reports view",
+        "i need a breakdown of last week",
+        "where can i see totals by department",
+        "display the monthly figures"
+      ],
+      "answer": {
+        "steps": [
+          "Open Reports from the top navigation.",
+          "Pick a region and a period in the filter bar; the charts update in place.",
+          "Use Export to download the table you're looking at."
+        ],
+        "links": [
+          { "label": "Reports", "target": { "route": "/reports" }, "need": "reports" }
+        ]
+      }
+    },
+    {
+      "id": "book_room",
+      "family": "howto",
+      "label": "Book a meeting room",
+      "slots": ["region", "period"],
+      "keywords": "book booking room meeting reserve reservation space desk calendar schedule",
+      "templates": [
+        "how do i book a meeting room",
+        "how do i reserve a room",
+        "how can i book a room in {region}",
+        "where do i reserve a space for {period}",
+        "how do i find a free room in {region}",
+        "how do i schedule a meeting room for {period}",
+        "i want to book a desk in {region}",
+        "where is the room booking page",
+        "how do i reserve a space in {region} for {period}",
+        "how do i cancel a room booking"
+      ],
+      "paraphrases": [
+        "need a room for a meeting",
+        "reserve a conference room",
+        "how do i grab a room for tomorrow",
+        "where do i book space",
+        "can i reserve a desk",
+        "get me a meeting room in the main building",
+        "how to book rooms",
+        "is there a way to reserve a room",
+        "i need somewhere to hold a meeting",
+        "book a room this week",
+        "grab me a room at 2",
+        "reserve the large room for thursday",
+        "how do i put a hold on a conference room",
+        "book the boardroom for an hour",
+        "i need a meeting space on friday morning",
+        "reserve somewhere for ten people",
+        "hold a room for my team tomorrow",
+        "how do i schedule the training room",
+        "get me a space at 4pm",
+        "book a huddle room this afternoon",
+        "where do i reserve the auditorium",
+        "put a room on my calendar"
+      ],
+      "answer": {
+        "steps": [
+          "Open Rooms from the top navigation.",
+          "Choose the building and the time; free rooms are highlighted.",
+          "Click a room to reserve it — the booking lands in your calendar."
+        ],
+        "links": [
+          { "label": "Rooms", "target": { "route": "/rooms" }, "need": "rooms" }
+        ]
+      }
+    },
+    {
+      "id": "manage_users",
+      "family": "howto",
+      "label": "Add or remove a user",
+      "slots": ["department"],
+      "keywords": "user users add remove invite account access role permission staff member people team",
+      "templates": [
+        "how do i add a user",
+        "how do i invite someone",
+        "how do i remove a user",
+        "how do i give someone access",
+        "how do i add a new member to {department}",
+        "how do i change someone's role",
+        "where do i manage accounts",
+        "how do i take away access from a user in {department}",
+        "how do i see who has access",
+        "how do i invite a colleague from {department}"
+      ],
+      "paraphrases": [
+        "add a new person to the system",
+        "someone left, how do i remove their account",
+        "invite my colleague",
+        "where are the user settings",
+        "change a person's permissions",
+        "how do i onboard a new starter",
+        "revoke access for a user",
+        "manage the team",
+        "give jane admin rights",
+        "who can i add to the account",
+        "a new starter joins next week, how do i set them up",
+        "make sarah an administrator",
+        "remove a user from the system",
+        "kick someone off the account",
+        "how do i deactivate a leaver",
+        "promote a user to admin",
+        "how do i reset a colleague's access",
+        "add tom to the finance team",
+        "give a new employee a login",
+        "who is an administrator here",
+        "take away editing rights from a user",
+        "how do i get a contractor into the system",
+        "downgrade someone to read only",
+        "create an account for the new manager"
+      ],
+      "answer": {
+        "steps": [
+          "Open Settings → Users.",
+          "Click Invite, enter the email address, and pick a role and department.",
+          "To remove someone, open their row and choose Remove access."
+        ],
+        "links": [
+          { "label": "Users", "target": { "route": "/settings/users" }, "need": "admin" }
+        ]
+      }
+    },
+    {
+      "id": "connect_integrations",
+      "family": "howto",
+      "label": "Connect another system",
+      "slots": [],
+      "keywords": "integration integrations connect api webhook sync link calendar email slack import",
+      "templates": [
+        "how do i connect another system",
+        "how do i set up an integration",
+        "how do i connect my calendar",
+        "where do i add a webhook",
+        "how do i link our email",
+        "how do i sync with another tool",
+        "how do i get an api key",
+        "where are the integrations",
+        "how do i import data from another app",
+        "how do i hook this up to slack"
+      ],
+      "paraphrases": [
+        "can this talk to our other tools",
+        "connect the calendar",
+        "set up a webhook",
+        "where's the api",
+        "i want to sync tickets to another system",
+        "link it with slack",
+        "how do i wire up an integration",
+        "does it integrate with anything",
+        "add a connection to another service",
+        "import from our old system",
+        "can we push tickets into our messaging tool",
+        "where do i create a developer key",
+        "hook up the calendar",
+        "connect our chat app",
+        "how do i get tickets to appear in teams",
+        "wire it into our helpdesk software",
+        "set up an api token",
+        "sync the calendar with outlook",
+        "can it send events to another platform",
+        "where do i find the integration settings",
+        "link our email system so tickets come in from mail",
+        "feed the data into our data warehouse",
+        "how do i connect a third party service",
+        "plug in an external tool",
+        "authorize an app to use the api",
+        "generate a key for developers"
+      ],
+      "answer": {
+        "steps": [
+          "Open Settings → Integrations.",
+          "Pick the system you want to connect and follow the connect flow; keys are shown once.",
+          "Webhooks and API keys are on the same page under Developer."
+        ],
+        "links": [
+          { "label": "Integrations", "target": { "route": "/settings/integrations" }, "need": "admin" }
+        ]
+      }
+    },
+    {
+      "id": "export_data",
+      "family": "howto",
+      "label": "Export data",
+      "slots": ["period"],
+      "keywords": "export download csv excel spreadsheet file save data extract",
+      "templates": [
+        "how do i export data",
+        "how do i download a spreadsheet",
+        "how do i get a csv",
+        "how do i export the {period} data",
+        "where is the download button",
+        "how do i save the table to excel",
+        "how do i extract the records for {period}",
+        "can i download the list",
+        "how do i get the data out",
+        "how do i export everything from {period}"
+      ],
+      "paraphrases": [
+        "i need this in excel",
+        "download the table",
+        "get me a csv of the tickets",
+        "save the data to a file",
+        "how do i pull the records out",
+        "export to spreadsheet",
+        "is there a download option",
+        "dump the data",
+        "i want to take the numbers into a spreadsheet",
+        "export last quarter",
+        "put this list into a spreadsheet for me",
+        "download everything from last month",
+        "how do i get a copy of the records",
+        "export the ticket list as csv",
+        "save this table as a file",
+        "i want to download the report data",
+        "grab an excel copy of the invoices",
+        "how do i pull all the rooms into a spreadsheet",
+        "give me a downloadable version",
+        "export the numbers for finance",
+        "can i get the raw data",
+        "back up the data to a file",
+        "copy the whole table out"
+      ],
+      "answer": {
+        "steps": [
+          "Open the list or report you want.",
+          "Click Export in the top-right of the table; choose CSV or Excel.",
+          "Large exports are emailed to you when ready."
+        ],
+        "links": [
+          { "label": "Reports", "target": { "route": "/reports" }, "need": "reports" },
+          { "label": "Tickets", "target": { "route": "/tickets" }, "need": "tickets" }
+        ]
+      }
+    },
+    {
+      "id": "set_notifications",
+      "family": "howto",
+      "label": "Change notifications",
+      "slots": [],
+      "keywords": "notifications notification alert alerts email push reminder subscribe mute turn off",
+      "templates": [
+        "how do i change my notifications",
+        "how do i turn off email alerts",
+        "how do i get notified about new tickets",
+        "where are the notification settings",
+        "how do i mute alerts",
+        "how do i subscribe to updates",
+        "how do i stop getting emails",
+        "can i get push notifications",
+        "how do i set a reminder",
+        "how do i turn alerts back on"
+      ],
+      "paraphrases": [
+        "too many emails, make it stop",
+        "i want alerts on my phone",
+        "how do i get pinged when something happens",
+        "turn off the notifications",
+        "notify me about new requests",
+        "where do i manage alerts",
+        "stop emailing me",
+        "set up reminders",
+        "can i choose what i get notified about",
+        "unsubscribe from updates",
+        "i get an email for every single ticket, reduce it",
+        "alert me on my mobile when something urgent arrives",
+        "where do i choose which updates i get",
+        "only notify me about high priority requests",
+        "send me a text when a room is booked",
+        "quiet the email alerts down",
+        "i want fewer notifications",
+        "how do i pick what alerts i receive",
+        "turn on push alerts for my phone",
+        "stop notifying me about closed tickets",
+        "digest the alerts into one daily email",
+        "change how often i get reminders",
+        "mute everything for a week",
+        "calm down the notifications",
+        "which updates do i receive and where do i change that"
+      ],
+      "answer": {
+        "steps": [
+          "Open your profile menu → Notifications.",
+          "Toggle email or push per event type; Mute all pauses everything for a day."
+        ],
+        "links": [
+          { "label": "Notifications", "target": { "route": "/me/notifications" } }
+        ]
+      }
+    },
+    {
+      "id": "view_invoices",
+      "family": "howto",
+      "label": "Find an invoice",
+      "slots": ["period", "department"],
+      "keywords": "invoice invoices bill billing payment paid unpaid receipt cost charge",
+      "templates": [
+        "how do i find an invoice",
+        "where are the invoices",
+        "how do i see the bills for {period}",
+        "where do i find the {department} invoices",
+        "how do i check if an invoice is paid",
+        "how do i download a receipt",
+        "show me billing for {period}",
+        "where is the payment history",
+        "how do i see what {department} was charged",
+        "how do i look up a bill from {period}"
+      ],
+      "paraphrases": [
+        "i need last month's bill",
+        "has invoice 4471 been paid",
+        "where's billing",
+        "find the receipt for the printers",
+        "how much did we pay in march",
+        "show me unpaid invoices",
+        "get me the finance invoices",
+        "look up a charge",
+        "where do i see what we owe",
+        "download the invoice",
+        "was the april bill settled",
+        "get me the pdf of the catering invoice",
+        "where's the payment record for that order",
+        "has the cleaning company been paid",
+        "show me the invoice for the new chairs",
+        "find the bill from the electrician",
+        "i need the receipt for the software licence",
+        "did we pay the security firm",
+        "open the billing page",
+        "look up invoice number 8812",
+        "where are the paid invoices",
+        "show me all charges from january",
+        "get the pdf of a bill"
+      ],
+      "answer": {
+        "steps": [
+          "Open Billing from the top navigation.",
+          "Filter by department or period; each invoice row shows paid / unpaid.",
+          "Open a row to download the PDF."
+        ],
+        "links": [
+          { "label": "Billing", "target": { "route": "/billing" }, "need": "billing" }
+        ]
+      }
+    },
+    {
+      "id": "run_setup",
+      "family": "howto",
+      "label": "Run the setup wizard",
+      "slots": [],
+      "keywords": "setup wizard onboarding configure start getting started initial install first time",
+      "templates": [
+        "how do i run the setup wizard",
+        "how do i get started",
+        "where is the onboarding",
+        "how do i configure the app for the first time",
+        "how do i restart setup",
+        "is there a getting started guide",
+        "how do i set this up",
+        "where do i begin",
+        "how do i finish the initial configuration",
+        "can i rerun the wizard"
+      ],
+      "paraphrases": [
+        "i'm new here, what do i do first",
+        "walk me through setup",
+        "start the configuration",
+        "how do i set everything up",
+        "getting started",
+        "open the wizard",
+        "first time using this",
+        "where's the onboarding flow",
+        "help me configure the basics",
+        "redo the setup",
+        "just created an account, where do i begin",
+        "take me through the initial setup again",
+        "launch the setup wizard",
+        "start the onboarding",
+        "how do i configure the basics from scratch",
+        "run the first time configuration",
+        "i want to redo the initial settings",
+        "where is the quick start",
+        "set the app up for my company",
+        "begin the setup process",
+        "reset and start over with configuration",
+        "show me the setup steps",
+        "new account, what comes first",
+        "launch the initial configuration"
+      ],
+      "answer": {
+        "steps": [
+          "Open Settings → Setup wizard.",
+          "It walks through buildings, departments and notifications; you can rerun it any time."
+        ],
+        "links": [
+          { "label": "Setup wizard", "target": { "route": "/settings/setup" }, "need": "admin" }
+        ]
+      }
+    },
+    {
+      "id": "open_tickets_status",
+      "family": "status",
+      "label": "How many tickets are open",
+      "slots": ["department", "region"],
+      "keywords": "open tickets count how many outstanding pending backlog queue waiting unresolved",
+      "templates": [
+        "how many tickets are open",
+        "how many open tickets does {department} have",
+        "what is the ticket backlog",
+        "how many requests are waiting in {region}",
+        "how many unresolved tickets are there",
+        "is the queue long",
+        "what does the ticket queue look like for {department}",
+        "how many outstanding requests in {region}",
+        "how big is the backlog",
+        "what is pending for {department}"
+      ],
+      "paraphrases": [
+        "how's the queue looking",
+        "any tickets outstanding",
+        "how much is waiting on it",
+        "are there many open requests",
+        "ticket count",
+        "what's still open",
+        "how many things are in the backlog right now",
+        "give me the open ticket number",
+        "how many issues are unresolved in the north campus",
+        "current queue size",
+        "how much is sitting in the queue for it",
+        "is the backlog large today",
+        "number of unresolved requests in the east wing",
+        "how many jobs are still waiting",
+        "count of open issues for facilities",
+        "what's the size of the queue right now",
+        "how many requests haven't been dealt with",
+        "is the helpdesk swamped",
+        "how many tickets are pending for security",
+        "what's outstanding in the north campus",
+        "how many open items do we have",
+        "anything still waiting in the queue",
+        "is there a big backlog"
+      ],
+      "status": {
+        "unavailable": "I can't read the live ticket queue from here — open Tickets for the current count.",
+        "links": [
+          { "label": "Tickets", "target": { "route": "/tickets" }, "need": "tickets" }
+        ]
+      }
+    },
+    {
+      "id": "room_availability",
+      "family": "status",
+      "label": "Which rooms are free",
+      "slots": ["region", "period"],
+      "keywords": "free rooms available availability empty vacant open now which rooms",
+      "templates": [
+        "which rooms are free",
+        "are there any free rooms in {region}",
+        "what is available in {region} {period}",
+        "is there an empty room right now",
+        "how many rooms are available",
+        "any vacant rooms in {region}",
+        "what rooms are open {period}",
+        "is anything free in {region}",
+        "show me available rooms",
+        "which meeting rooms are available in {region}"
+      ],
+      "paraphrases": [
+        "anything free right now",
+        "is the boardroom empty",
+        "room availability",
+        "any space open in the west wing",
+        "are rooms free this afternoon",
+        "what's vacant",
+        "do we have a free room",
+        "how many rooms are open",
+        "check room availability for the south campus",
+        "is there somewhere free to meet",
+        "got a room free this afternoon in the west wing",
+        "is the large meeting room taken",
+        "what space is open at the moment",
+        "any rooms free after lunch",
+        "is the boardroom booked",
+        "find me an empty room",
+        "which rooms are unbooked tomorrow morning",
+        "is there a free desk in the main building",
+        "is anything available at 3",
+        "what's free in the east wing",
+        "are all the rooms taken",
+        "show me what's not booked",
+        "got anything free"
+      ],
+      "status": {
+        "unavailable": "I can't read room availability from here — open Rooms for the live view.",
+        "links": [
+          { "label": "Rooms", "target": { "route": "/rooms" }, "need": "rooms" }
+        ]
+      }
+    },
+    {
+      "id": "invoice_status",
+      "family": "status",
+      "label": "What is unpaid",
+      "slots": ["department", "period"],
+      "keywords": "unpaid overdue outstanding owe owed balance due amount total spend",
+      "templates": [
+        "what is unpaid",
+        "how much do we owe",
+        "are any invoices overdue",
+        "what is the outstanding balance for {department}",
+        "how much did we spend {period}",
+        "is anything overdue for {department}",
+        "what is due {period}",
+        "what is the total spend for {department} {period}",
+        "how many invoices are unpaid",
+        "what do we owe {period}"
+      ],
+      "paraphrases": [
+        "anything overdue",
+        "what's the balance",
+        "how much is outstanding",
+        "are we behind on payments",
+        "total spend this quarter",
+        "how much have we paid so far",
+        "any bills past due",
+        "what's owed to facilities vendors",
+        "outstanding amount",
+        "did we pay everything for last quarter",
+        "are we behind on any payments to suppliers",
+        "total amount owed this month",
+        "did finance settle everything from last month",
+        "how much is still due",
+        "what haven't we paid yet",
+        "is there anything unpaid for facilities",
+        "how much did we spend on cleaning this year",
+        "are there overdue bills",
+        "what is the total outstanding",
+        "how much money do we still owe vendors",
+        "did we clear last quarter's invoices",
+        "any late payments",
+        "what do we owe in total"
+      ],
+      "status": {
+        "unavailable": "I can't read balances from here — open Billing for the current figures.",
+        "links": [
+          { "label": "Billing", "target": { "route": "/billing" }, "need": "billing" }
+        ]
+      }
+    },
+    {
+      "id": "system_health",
+      "family": "status",
+      "label": "Is everything running",
+      "slots": [],
+      "keywords": "health status running down outage working okay ok up online offline broken systems",
+      "templates": [
+        "is everything running",
+        "is the system healthy",
+        "are there any outages",
+        "is anything down",
+        "what is the system status",
+        "is everything ok",
+        "are all systems online",
+        "is anything broken right now",
+        "what is the health status",
+        "are we up"
+      ],
+      "paraphrases": [
+        "any outages",
+        "is it working",
+        "system status",
+        "anything down at the moment",
+        "is the service up",
+        "all good",
+        "are the integrations still connected",
+        "are we having problems",
+        "how are the systems doing",
+        "is everything online",
+        "is the service having problems",
+        "is everything up and running",
+        "any known issues at the moment",
+        "is the platform down",
+        "are there any incidents right now",
+        "is the site slow today",
+        "is anything offline",
+        "is the app working properly",
+        "status of the systems",
+        "has there been an outage",
+        "is the system stable",
+        "are all services healthy",
+        "any problems with the service right now",
+        "is it all running okay"
+      ],
+      "status": {
+        "unavailable": "I can't read system health from here — open Status for the live board.",
+        "links": [
+          { "label": "Status", "target": { "route": "/status" } }
+        ]
+      }
+    }
+  ],
+  "heldout": [
+    { "utterance": "the lift in the east wing is stuck, where do i say so", "intent": "create_ticket" },
+    { "utterance": "who do i tell that a light is out", "intent": "create_ticket" },
+    { "utterance": "log a fault with security", "intent": "create_ticket" },
+    { "utterance": "pull up the graphs for the south campus", "intent": "find_reports" },
+    { "utterance": "i want to see how many requests we handled this month", "intent": "find_reports" },
+    { "utterance": "where's the analytics page", "intent": "find_reports" },
+    { "utterance": "grab me a room at 3", "intent": "book_room" },
+    { "utterance": "reserve the big room for friday", "intent": "book_room" },
+    { "utterance": "how do i put a hold on a meeting space", "intent": "book_room" },
+    { "utterance": "a new hire starts monday, how do i get them in", "intent": "manage_users" },
+    { "utterance": "make tom an administrator", "intent": "manage_users" },
+    { "utterance": "kick a user off the system", "intent": "manage_users" },
+    { "utterance": "can we push tickets into our chat tool", "intent": "connect_integrations" },
+    { "utterance": "where do i generate a developer key", "intent": "connect_integrations" },
+    { "utterance": "hook up the calendar sync", "intent": "connect_integrations" },
+    { "utterance": "put this list in excel for me", "intent": "export_data" },
+    { "utterance": "download everything from last quarter", "intent": "export_data" },
+    { "utterance": "how do i get a copy of the table", "intent": "export_data" },
+    { "utterance": "i keep getting emails about every ticket, calm it down", "intent": "set_notifications" },
+    { "utterance": "alert me on my phone when something urgent comes in", "intent": "set_notifications" },
+    { "utterance": "where do i pick which updates i receive", "intent": "set_notifications" },
+    { "utterance": "was the march bill settled", "intent": "view_invoices" },
+    { "utterance": "get me the pdf of the cleaning invoice", "intent": "view_invoices" },
+    { "utterance": "where's the payment record for it", "intent": "view_invoices" },
+    { "utterance": "brand new account, where do i start", "intent": "run_setup" },
+    { "utterance": "take me through the initial configuration again", "intent": "run_setup" },
+    { "utterance": "launch the onboarding", "intent": "run_setup" },
+    { "utterance": "how much is sitting in the queue for facilities", "intent": "open_tickets_status" },
+    { "utterance": "is the backlog big today", "intent": "open_tickets_status" },
+    { "utterance": "number of unresolved requests in the west wing", "intent": "open_tickets_status" },
+    { "utterance": "got a room free this afternoon in the main building", "intent": "room_availability" },
+    { "utterance": "is the small meeting room taken", "intent": "room_availability" },
+    { "utterance": "what space is open right now", "intent": "room_availability" },
+    { "utterance": "are we behind on any payments to vendors", "intent": "invoice_status" },
+    { "utterance": "total owed this month", "intent": "invoice_status" },
+    { "utterance": "did finance settle everything from last quarter", "intent": "invoice_status" },
+    { "utterance": "is the service having a wobble", "intent": "system_health" },
+    { "utterance": "everything up and running", "intent": "system_health" },
+    { "utterance": "any known problems at the moment", "intent": "system_health" },
+    { "utterance": "hey there", "intent": "greeting" },
+    { "utterance": "good morning assistant", "intent": "greeting" },
+    { "utterance": "what's the weather like in lisbon", "intent": "out_of_domain" },
+    { "utterance": "write me a poem about cats", "intent": "out_of_domain" },
+    { "utterance": "who won the match last night", "intent": "out_of_domain" }
+  ]
+}
